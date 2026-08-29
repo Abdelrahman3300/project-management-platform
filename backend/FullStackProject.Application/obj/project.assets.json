@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {}
+    "net9.0": {
+      "FullStackProject.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/FullStackProject.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/FullStackProject.Domain.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "FullStackProject.Domain/1.0.0": {
+      "type": "project",
+      "path": "../FullStackProject.Domain/FullStackProject.Domain.csproj",
+      "msbuildProject": "../FullStackProject.Domain/FullStackProject.Domain.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net9.0": []
+    "net9.0": [
+      "FullStackProject.Domain >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\abdul\\.nuget\\packages\\": {},
@@ -40,7 +59,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Domain\\FullStackProject.Domain.csproj": {
+              "projectPath": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Domain\\FullStackProject.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
