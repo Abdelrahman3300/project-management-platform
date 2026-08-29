@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "X4HjzgpATxM=",
+  "success": true,
+  "projectFilePath": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.API\\FullStackProject.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\abdul\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.6\\microsoft.aspnetcore.openapi.9.0.6.nupkg.sha512",
+    "C:\\Users\\abdul\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
