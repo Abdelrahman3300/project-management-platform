@@ -162,8 +162,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj": {
-              "projectPath": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj"
+            "D:\\Work\\Web Developing\\FULLSTACKPROJECT\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj": {
+              "projectPath": "D:\\Work\\Web Developing\\FULLSTACKPROJECT\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj"
             },
             "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Infrastructure\\FullStackProject.Infrastructure.csproj": {
               "projectPath": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Infrastructure\\FullStackProject.Infrastructure.csproj"

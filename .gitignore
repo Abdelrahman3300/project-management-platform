@@ -1,0 +1,22 @@
+```gitignore
+# .NET
+bin/
+obj/
+.vs/
+
+# Angular
+node_modules/
+dist/
+
+# Environment / secrets
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+```

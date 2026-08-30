@@ -4,14 +4,14 @@
     "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Infrastructure\\FullStackProject.Infrastructure.csproj": {}
   },
   "projects": {
-    "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj": {
+    "D:\\Work\\Web Developing\\FULLSTACKPROJECT\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj",
+        "projectUniqueName": "D:\\Work\\Web Developing\\FULLSTACKPROJECT\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj",
         "projectName": "FullStackProject.Application",
-        "projectPath": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj",
+        "projectPath": "D:\\Work\\Web Developing\\FULLSTACKPROJECT\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj",
         "packagesPath": "C:\\Users\\abdul\\.nuget\\packages\\",
-        "outputPath": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Application\\obj\\",
+        "outputPath": "D:\\Work\\Web Developing\\FULLSTACKPROJECT\\backend\\FullStackProject.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Software\\VS 2022\\SDK\\NuGetPackages"
@@ -172,8 +172,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj": {
-                "projectPath": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj"
+              "D:\\Work\\Web Developing\\FULLSTACKPROJECT\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj": {
+                "projectPath": "D:\\Work\\Web Developing\\FULLSTACKPROJECT\\backend\\FullStackProject.Application\\FullStackProject.Application.csproj"
               },
               "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Domain\\FullStackProject.Domain.csproj": {
                 "projectPath": "D:\\Work\\Web Developing\\FullStackProject\\backend\\FullStackProject.Domain\\FullStackProject.Domain.csproj"
