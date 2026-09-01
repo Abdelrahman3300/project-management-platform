@@ -43,4 +43,8 @@ public class UserService : IUserService
             CreatedAt = user.CreatedAt
         };
     }
+
+    public async Task<UserDto?> UpdateAsync( Guid id, UpdateUserRequest request) { var user = await _userRepository.GetByIdAsync(id); if (user is null) { return null; } var existingUser = await _userRepository.GetByEmailAsync( request.Email); if (existingUser is not null && existingUser.Id != id) { throw new InvalidOperationException( "A user with this email already exists."); } user.FirstName = request.FirstName; user.LastName = request.LastName; user.Email = request.Email; user.IsActive = request.IsActive; await _userRepository.UpdateAsync(user); return MapToDto(user); }
+
+    public async Task<bool> DeleteAsync(Guid id) { var user = await _userRepository.GetByIdAsync(id); if (user is null) { return false; } await _userRepository.DeleteAsync(user); return true; }
 }
