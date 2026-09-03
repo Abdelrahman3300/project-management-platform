@@ -1,0 +1,74 @@
+<div class="details-container">
+
+    <button
+      type="button"
+      (click)="goBack()"
+    >
+      ← Back to Projects
+    </button>
+  
+    @if (loading) {
+      <p>Loading project...</p>
+    }
+  
+    @if (error) {
+      <p class="error">
+        {{ error }}
+      </p>
+    }
+  
+    @if (!loading && project) {
+  
+      <div class="project-details">
+  
+        <h1>{{ project.name }}</h1>
+  
+        <div class="detail">
+  
+          <strong>Description</strong>
+  
+          <p>
+            {{ project.description || 'No description provided.' }}
+          </p>
+  
+        </div>
+  
+        <div class="detail">
+  
+          <strong>Owner</strong>
+  
+          <p>
+            {{ project.ownerName }}
+          </p>
+  
+        </div>
+  
+        <div class="detail">
+  
+          <strong>Created</strong>
+  
+          <p>
+            {{ project.createdAt | date:'medium' }}
+          </p>
+  
+        </div>
+  
+        @if (project.updatedAt) {
+  
+          <div class="detail">
+  
+            <strong>Last Updated</strong>
+  
+            <p>
+              {{ project.updatedAt | date:'medium' }}
+            </p>
+  
+          </div>
+  
+        }
+  
+      </div>
+  
+    }
+  
+  </div>

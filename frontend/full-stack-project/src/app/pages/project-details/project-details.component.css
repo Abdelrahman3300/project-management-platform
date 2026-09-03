@@ -1,0 +1,50 @@
+.details-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .details-container > button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 25px;
+  }
+  
+  .details-container > button:hover {
+    background: #555;
+  }
+  
+  .project-details {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 25px;
+    background: white;
+  }
+  
+  .project-details h1 {
+    margin-top: 0;
+    margin-bottom: 25px;
+  }
+  
+  .detail {
+    margin-bottom: 20px;
+  }
+  
+  .detail strong {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .detail p {
+    margin: 0;
+  }
+  
+  .error {
+    color: #b42318;
+    font-weight: bold;
+  }
