@@ -1,3 +1,4 @@
+@if (!isProjectDetailsPage()) {
 <div class="container">
 
   <h1>My Projects</h1>
@@ -53,7 +54,7 @@
     </form>
 
   </div>
-
+  
 
   <!-- ERROR -->
 
@@ -126,6 +127,13 @@
               Delete
             </button>
 
+            <button
+            type="button"
+            (click)="viewProject(project.id)"
+            >
+             View Details
+            </button>
+
           </div>
 
         }
@@ -178,21 +186,17 @@
               Cancel
             </button>
 
-            <button
-            type="button"
-            (click)="viewProject(project.id)"
-            >
-             View Details
-            </button>
-
           </div>
-
+          
         }
-
+        
       </div>
+      
 
     }
 
   }
 
 </div>
+}
+<router-outlet></router-outlet>

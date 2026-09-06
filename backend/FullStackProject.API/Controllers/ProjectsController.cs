@@ -2,10 +2,13 @@ using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace FullStackProject.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProjectsController : ControllerBase
 {
     private readonly IProjectService _projectService;

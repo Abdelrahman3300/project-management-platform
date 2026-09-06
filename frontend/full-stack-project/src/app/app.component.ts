@@ -1,8 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+
 import { Project } from './models/project';
+import { Router, RouterOutlet } from '@angular/router';
 
 import {
   CreateProjectRequest,
@@ -13,7 +14,7 @@ import {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -22,6 +23,10 @@ export class AppComponent implements OnInit {
   private readonly projectService = inject(ProjectService);
   private readonly router = inject(Router);
 
+  isProjectDetailsPage(): boolean {
+    return this.router.url.startsWith('/projects/');
+  }
+  
   projects: Project[] = [];
 
   loading = true;
@@ -199,7 +204,7 @@ export class AppComponent implements OnInit {
 
     });
   }
-  
+
   viewProject(id: string): void {
     this.router.navigate(['/projects', id]);
   }

@@ -1,5 +1,6 @@
 using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
+using BCrypt.Net;
 
 namespace FullStackProject.Application.Services;
 
@@ -28,8 +29,33 @@ public class UserService : IUserService
         return user is null ? null : MapToDto(user);
     }
 
-    public async Task<UserDto> CreateAsync(CreateUserRequest request) { var emailExists = await _userRepository.ExistsByEmailAsync(request.Email); if (emailExists) { throw new InvalidOperationException( "A user with this email already exists."); } var user = new FullStackProject.Domain.Entities.User { Id = Guid.NewGuid(), FirstName = request.FirstName, LastName = request.LastName, Email = request.Email, IsActive = true, CreatedAt = DateTime.UtcNow }; await _userRepository.AddAsync(user); return MapToDto(user); }
-    
+    public async Task<UserDto> CreateAsync(CreateUserRequest request)
+{
+    var emailExists =
+        await _userRepository.ExistsByEmailAsync(request.Email);
+
+    if (emailExists)
+    {
+        throw new InvalidOperationException(
+            "A user with this email already exists.");
+    }
+
+    var user = new FullStackProject.Domain.Entities.User
+    {
+        Id = Guid.NewGuid(),
+        FirstName = request.FirstName,
+        LastName = request.LastName,
+        Email = request.Email,
+        PasswordHash = BCrypt.HashPassword(request.Password),
+        IsActive = true,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    await _userRepository.AddAsync(user);
+
+    return MapToDto(user);
+}
+   
     private static UserDto MapToDto(
         FullStackProject.Domain.Entities.User user)
     {
