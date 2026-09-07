@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FullStackProject.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5fdb335e285faee553b916d27b57637dd0b4539c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+59e169272dba17fc40b1e5a724070d03446e9c6e")]
 [assembly: System.Reflection.AssemblyProductAttribute("FullStackProject.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FullStackProject.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -2,8 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-using BCrypt.Net;
-
 using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
 using FullStackProject.Domain.Entities;
@@ -39,7 +37,7 @@ public class AuthService : IAuthService
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
-            PasswordHash = BCrypt.HashPassword(request.Password),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             IsActive = true,
             CreatedAt = DateTime.UtcNow
         };
@@ -71,9 +69,9 @@ public class AuthService : IAuthService
         if (string.IsNullOrWhiteSpace(user.PasswordHash))
             return null;
 
-        var passwordValid = BCrypt.Verify(
-            request.Password,
-            user.PasswordHash);
+        var passwordValid = BCrypt.Net.BCrypt.Verify(
+        request.Password,
+        user.PasswordHash);
 
         if (!passwordValid)
             return null;

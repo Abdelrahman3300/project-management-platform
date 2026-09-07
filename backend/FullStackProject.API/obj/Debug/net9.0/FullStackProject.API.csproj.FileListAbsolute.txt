@@ -133,3 +133,12 @@ D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\obj\Debug\n
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\obj\Debug\net9.0\FullStackProject.API.pdb
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\obj\Debug\net9.0\FullStackProject.API.genruntimeconfig.cache
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\obj\Debug\net9.0\ref\FullStackProject.API.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\BCrypt.Net-Next.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

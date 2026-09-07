@@ -1,6 +1,6 @@
 using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
-using BCrypt.Net;
+
 
 namespace FullStackProject.Application.Services;
 
@@ -46,7 +46,7 @@ public class UserService : IUserService
         FirstName = request.FirstName,
         LastName = request.LastName,
         Email = request.Email,
-        PasswordHash = BCrypt.HashPassword(request.Password),
+        PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
         IsActive = true,
         CreatedAt = DateTime.UtcNow
     };
