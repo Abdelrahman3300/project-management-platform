@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { Project } from './models/project';
 import { Router, RouterOutlet } from '@angular/router';
 
+import { AuthService } from './services/auth.service';
+
 import {
   CreateProjectRequest,
   ProjectService,
@@ -22,6 +24,16 @@ export class AppComponent implements OnInit {
 
   private readonly projectService = inject(ProjectService);
   private readonly router = inject(Router);
+  readonly authService = inject(AuthService);
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
 
   isProjectDetailsPage(): boolean {
     return this.router.url.startsWith('/projects/');
@@ -208,4 +220,5 @@ export class AppComponent implements OnInit {
   viewProject(id: string): void {
     this.router.navigate(['/projects', id]);
   }
+  
 }

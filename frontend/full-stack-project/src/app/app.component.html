@@ -1,6 +1,22 @@
-@if (!isProjectDetailsPage()) {
+@if (isLoggedIn()) {
+  <div class="auth-bar">
+    <span>
+      Welcome, {{ authService.getCurrentUser()?.firstName }}
+    </span>
+
+    <button
+      type="button"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+  </div>
+}
+
+@if (!isProjectDetailsPage()&& isLoggedIn()) {
 <div class="container">
 
+  
   <h1>My Projects</h1>
 
   <!-- CREATE PROJECT -->
