@@ -11,6 +11,5 @@ public class CreateProjectRequest
     [MaxLength(1000)]
     public string? Description { get; set; }
 
-    [Required]
-    public Guid OwnerId { get; set; }
+    
 }

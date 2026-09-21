@@ -10,22 +10,43 @@ public class TaskItemService : ITaskItemService
     private readonly IProjectRepository _projectRepository;
     private readonly IUserRepository _userRepository;
     private readonly IProjectMemberRepository _memberRepository;
+    private readonly ICurrentUserService _currentUserService;
 
     public TaskItemService(
-        ITaskItemRepository taskRepository,
-        IProjectRepository projectRepository,
-        IUserRepository userRepository,
-        IProjectMemberRepository memberRepository)
+    ITaskItemRepository taskRepository,
+    IUserRepository userRepository,
+    IProjectMemberRepository memberRepository,
+    IProjectRepository projectRepository,
+    ICurrentUserService currentUserService)
     {
         _taskRepository = taskRepository;
-        _projectRepository = projectRepository;
         _userRepository = userRepository;
         _memberRepository = memberRepository;
+        _projectRepository = projectRepository;
+        _currentUserService = currentUserService;
     }
 
     public async Task<IReadOnlyList<TaskItemDto>> GetByProjectIdAsync(
         Guid projectId)
     {
+        var currentUserId = _currentUserService.UserId;
+
+        if (currentUserId is null)
+        {
+            throw new UnauthorizedAccessException(
+                "Authenticated user could not be identified.");
+        }
+
+        var hasAccess =
+            await _projectRepository.HasAccessAsync(
+                projectId,
+                currentUserId.Value);
+
+        if (!hasAccess)
+        {
+            throw new UnauthorizedAccessException(
+                "You do not have access to this project.");
+        }
         var tasks = await _taskRepository.GetByProjectIdAsync(projectId);
 
         return tasks
@@ -47,26 +68,45 @@ public class TaskItemService : ITaskItemService
         Guid projectId,
         CreateTaskRequest request)
     {
+        var currentUserId = _currentUserService.UserId;
+
+        if (currentUserId is null)
+        {
+            throw new UnauthorizedAccessException(
+                "Authenticated user could not be identified.");
+        }
+
+        var hasAccess =
+            await _projectRepository.HasAccessAsync(
+                projectId,
+                currentUserId.Value);
+
+        if (!hasAccess)
+        {
+            throw new UnauthorizedAccessException(
+                "You do not have access to this project.");
+        }
+
         var project = await _projectRepository.GetByIdAsync(projectId);
 
         if (project is null)
             return null;
 
         if (request.AssignedToUserId.HasValue)
-{
-    var user = await _userRepository
-        .GetByIdAsync(request.AssignedToUserId.Value);
+        {
+            var user = await _userRepository
+                .GetByIdAsync(request.AssignedToUserId.Value);
 
-    if (user is null)
-        return null;
+            if (user is null)
+                return null;
 
-    var member = await _memberRepository.GetAsync(
-        projectId,
-        request.AssignedToUserId.Value);
+            var member = await _memberRepository.GetAsync(
+                projectId,
+                request.AssignedToUserId.Value);
 
-    if (member is null)
-        return null;
-}
+            if (member is null)
+                return null;
+        }
 
         var task = new TaskItem
         {
@@ -98,21 +138,40 @@ public class TaskItemService : ITaskItemService
         if (task is null)
             return null;
 
+        var currentUserId = _currentUserService.UserId;
+
+        if (currentUserId is null)
+        {
+            throw new UnauthorizedAccessException(
+                "Authenticated user could not be identified.");
+        }
+
+        var hasAccess =
+            await _projectRepository.HasAccessAsync(
+                task.ProjectId,
+                currentUserId.Value);
+
+        if (!hasAccess)
+        {
+            throw new UnauthorizedAccessException(
+                "You do not have access to this project.");
+        }
+
         if (request.AssignedToUserId.HasValue)
-{
-    var user = await _userRepository
-        .GetByIdAsync(request.AssignedToUserId.Value);
+        {
+            var user = await _userRepository
+                .GetByIdAsync(request.AssignedToUserId.Value);
 
-    if (user is null)
-        return null;
+            if (user is null)
+                return null;
 
-    var member = await _memberRepository.GetAsync(
-        task.ProjectId,
-        request.AssignedToUserId.Value);
+            var member = await _memberRepository.GetAsync(
+                task.ProjectId,
+                request.AssignedToUserId.Value);
 
-    if (member is null)
-        return null;
-}
+            if (member is null)
+                return null;
+        }
 
         task.Title = request.Title;
         task.Description = request.Description;
@@ -139,6 +198,24 @@ public class TaskItemService : ITaskItemService
         if (task is null)
             return false;
 
+        var currentUserId = _currentUserService.UserId;
+
+        if (currentUserId is null)
+        {
+            throw new UnauthorizedAccessException(
+                "Authenticated user could not be identified.");
+        }
+
+        var hasAccess =
+            await _projectRepository.HasAccessAsync(
+                task.ProjectId,
+                currentUserId.Value);
+
+        if (!hasAccess)
+        {
+            throw new UnauthorizedAccessException(
+                "You do not have access to this project.");
+        }
         await _taskRepository.DeleteAsync(task);
 
         return true;

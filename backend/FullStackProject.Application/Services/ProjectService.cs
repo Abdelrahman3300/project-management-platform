@@ -2,42 +2,90 @@ using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
 using FullStackProject.Domain.Entities;
 
+
 namespace FullStackProject.Application.Services;
 
 public class ProjectService : IProjectService
 {
     private readonly IProjectRepository _projectRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ICurrentUserService _currentUserService;
 
     public ProjectService(
         IProjectRepository projectRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        ICurrentUserService currentUserService)
     {
         _projectRepository = projectRepository;
         _userRepository = userRepository;
+        _currentUserService = currentUserService;
     }
 
     public async Task<IReadOnlyList<ProjectDto>> GetAllAsync()
     {
-        var projects = await _projectRepository.GetAllAsync();
+    var currentUserId = _currentUserService.UserId;
 
-        return projects.Select(MapToDto).ToList();
+    if (currentUserId is null)
+    {
+        throw new UnauthorizedAccessException(
+            "Authenticated user could not be identified.");
+    }
+
+    var projects =
+        await _projectRepository.GetForUserAsync(
+            currentUserId.Value);
+
+    return projects.Select(MapToDto).ToList();
     }
 
     public async Task<ProjectDto?> GetByIdAsync(Guid id)
     {
-        var project = await _projectRepository.GetByIdAsync(id);
+        var currentUserId = _currentUserService.UserId;
 
-        return project == null ? null : MapToDto(project);
+        if (currentUserId is null)
+        {
+            throw new UnauthorizedAccessException(
+                "Authenticated user could not be identified.");
+        }
+
+        var hasAccess =
+            await _projectRepository.HasAccessAsync(
+                id,
+                currentUserId.Value);
+
+        if (!hasAccess)
+        {
+            return null;
+        }
+
+        var project =
+            await _projectRepository.GetByIdAsync(id);
+
+        return project == null
+            ? null
+            : MapToDto(project);
     }
 
-    public async Task<ProjectDto> CreateAsync(CreateProjectRequest request)
+    
+
+    public async Task<ProjectDto> CreateAsync(
+        CreateProjectRequest request)
     {
-        var owner = await _userRepository.GetByIdAsync(request.OwnerId);
+        var currentUserId = _currentUserService.UserId;
+
+        if (currentUserId is null)
+        {
+            throw new UnauthorizedAccessException(
+                "Authenticated user could not be identified.");
+        }
+
+        var owner =
+            await _userRepository.GetByIdAsync(currentUserId.Value);
 
         if (owner == null)
         {
-            throw new ArgumentException("Owner user not found.");
+            throw new ArgumentException(
+                "Authenticated user was not found.");
         }
 
         var project = new Project
@@ -45,7 +93,7 @@ public class ProjectService : IProjectService
             Id = Guid.NewGuid(),
             Name = request.Name,
             Description = request.Description,
-            OwnerId = request.OwnerId,
+            OwnerId = currentUserId.Value,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -60,11 +108,25 @@ public class ProjectService : IProjectService
         Guid id,
         UpdateProjectRequest request)
     {
-        var project = await _projectRepository.GetByIdAsync(id);
+        var project =
+            await _projectRepository.GetByIdAsync(id);
 
         if (project == null)
         {
             return null;
+        }
+
+        var currentUserId = _currentUserService.UserId;
+
+        if (currentUserId is null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        if (project.OwnerId != currentUserId.Value)
+        {
+            throw new UnauthorizedAccessException(
+                "Only the project owner can update this project.");
         }
 
         project.Name = request.Name;
@@ -78,11 +140,25 @@ public class ProjectService : IProjectService
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var project = await _projectRepository.GetByIdAsync(id);
+        var project =
+            await _projectRepository.GetByIdAsync(id);
 
         if (project == null)
         {
             return false;
+        }
+
+        var currentUserId = _currentUserService.UserId;
+
+        if (currentUserId is null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        if (project.OwnerId != currentUserId.Value)
+        {
+            throw new UnauthorizedAccessException(
+                "Only the project owner can delete this project.");
         }
 
         await _projectRepository.DeleteAsync(project);

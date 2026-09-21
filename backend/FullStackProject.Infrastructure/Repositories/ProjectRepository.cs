@@ -22,6 +22,18 @@ public class ProjectRepository : IProjectRepository
             .ToListAsync();
     }
 
+    public async Task<IReadOnlyList<Project>> GetForUserAsync(
+        Guid userId)
+    {
+        return await _context.Projects
+            .Include(x => x.Owner)
+            .Where(x =>
+                x.OwnerId == userId ||
+                x.Members.Any(m => m.UserId == userId))
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
     public async Task<Project?> GetByIdAsync(Guid id)
     {
         return await _context.Projects
@@ -45,5 +57,18 @@ public class ProjectRepository : IProjectRepository
     {
         _context.Projects.Remove(project);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> HasAccessAsync(
+    Guid projectId,
+    Guid userId)
+    {
+        return await _context.Projects
+            .AnyAsync(x =>
+                x.Id == projectId &&
+                (
+                    x.OwnerId == userId ||
+                    x.Members.Any(m => m.UserId == userId)
+                ));
     }
 }

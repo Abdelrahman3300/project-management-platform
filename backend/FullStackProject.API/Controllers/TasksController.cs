@@ -22,9 +22,22 @@ public class TasksController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<TaskItemDto>>> GetTasks(
         Guid projectId)
     {
-        var tasks = await _taskService.GetByProjectIdAsync(projectId);
+        try
+        {
+            var tasks =
+                await _taskService.GetByProjectIdAsync(projectId);
 
-        return Ok(tasks);
+            return Ok(tasks);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new
+                {
+                    message = ex.Message
+                });
+        }
     }
 
     // GET: api/projects/{projectId}/tasks/{taskId}
@@ -33,12 +46,22 @@ public class TasksController : ControllerBase
         Guid projectId,
         Guid taskId)
     {
-        var task = await _taskService.GetByIdAsync(taskId);
+         try
+        {
+            var tasks =
+                await _taskService.GetByProjectIdAsync(projectId);
 
-        if (task is null || task.ProjectId != projectId)
-            return NotFound();
-
-        return Ok(task);
+            return Ok(tasks);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new
+                {
+                    message = ex.Message
+                });
+        }
     }
 
     // POST: api/projects/{projectId}/tasks
@@ -47,7 +70,9 @@ public class TasksController : ControllerBase
         Guid projectId,
         [FromBody] CreateTaskRequest request)
     {
-        var task = await _taskService.CreateAsync(
+        try
+        {
+            var task = await _taskService.CreateAsync(
             projectId,
             request);
 
@@ -63,6 +88,17 @@ public class TasksController : ControllerBase
                 taskId = task.Id
             },
             task);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new
+                {
+                    message = ex.Message
+                });
+        }
+        
     }
 
     // PUT: api/projects/{projectId}/tasks/{taskId}
@@ -72,20 +108,33 @@ public class TasksController : ControllerBase
         Guid taskId,
         [FromBody] UpdateTaskRequest request)
     {
-        var existingTask = await _taskService.GetByIdAsync(taskId);
+        try
+        {
+            var existingTask = await _taskService.GetByIdAsync(taskId);
 
-        if (existingTask is null || existingTask.ProjectId != projectId)
-            return NotFound();
+            if (existingTask is null || existingTask.ProjectId != projectId)
+                return NotFound();
 
-        var task = await _taskService.UpdateAsync(
-            taskId,
-            request);
+            var task = await _taskService.UpdateAsync(
+                taskId,
+                request);
 
-        if (task is null)
-            return BadRequest(
-                "Assigned user does not exist.");
+            if (task is null)
+                return BadRequest(
+                    "Assigned user does not exist.");
 
-        return Ok(task);
+            return Ok(task);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new
+                {
+                    message = ex.Message
+                });
+        }
+        
     }
 
     // DELETE: api/projects/{projectId}/tasks/{taskId}
@@ -94,13 +143,26 @@ public class TasksController : ControllerBase
         Guid projectId,
         Guid taskId)
     {
-        var existingTask = await _taskService.GetByIdAsync(taskId);
+         try
+        {
+            var existingTask = await _taskService.GetByIdAsync(taskId);
 
-        if (existingTask is null || existingTask.ProjectId != projectId)
-            return NotFound();
+            if (existingTask is null || existingTask.ProjectId != projectId)
+                return NotFound();
 
-        await _taskService.DeleteAsync(taskId);
+            await _taskService.DeleteAsync(taskId);
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new
+                {
+                    message = ex.Message
+                });
+        }
+       
     }
 }

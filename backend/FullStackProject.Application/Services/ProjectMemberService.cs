@@ -9,21 +9,25 @@ public class ProjectMemberService : IProjectMemberService
     private readonly IProjectMemberRepository _memberRepository;
     private readonly IProjectRepository _projectRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ICurrentUserService _currentUserService;
 
     public ProjectMemberService(
         IProjectMemberRepository memberRepository,
         IProjectRepository projectRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        ICurrentUserService currentUserService)
     {
         _memberRepository = memberRepository;
         _projectRepository = projectRepository;
         _userRepository = userRepository;
+        _currentUserService = currentUserService;
     }
 
-    public async Task<IReadOnlyList<ProjectMemberDto>> GetByProjectIdAsync(
-        Guid projectId)
+    public async Task<IReadOnlyList<ProjectMemberDto>>
+        GetByProjectIdAsync(Guid projectId)
     {
-        var members = await _memberRepository.GetByProjectIdAsync(projectId);
+        var members =
+            await _memberRepository.GetByProjectIdAsync(projectId);
 
         return members.Select(MapToDto).ToList();
     }
@@ -33,22 +37,41 @@ public class ProjectMemberService : IProjectMemberService
         Guid userId,
         string role)
     {
-        var project = await _projectRepository.GetByIdAsync(projectId);
+        var project =
+            await _projectRepository.GetByIdAsync(projectId);
 
         if (project is null)
+        {
             return null;
+        }
 
-        var user = await _userRepository.GetByIdAsync(userId);
+        var currentUserId =
+            _currentUserService.UserId;
+
+        if (currentUserId is null ||
+            project.OwnerId != currentUserId.Value)
+        {
+            throw new UnauthorizedAccessException(
+                "Only the project owner can add members.");
+        }
+
+        var user =
+            await _userRepository.GetByIdAsync(userId);
 
         if (user is null)
+        {
             return null;
+        }
 
-        var existingMember = await _memberRepository.GetAsync(
-            projectId,
-            userId);
+        var existingMember =
+            await _memberRepository.GetAsync(
+                projectId,
+                userId);
 
         if (existingMember is not null)
+        {
             return null;
+        }
 
         var member = new ProjectMember
         {
@@ -65,7 +88,8 @@ public class ProjectMemberService : IProjectMemberService
         {
             ProjectId = member.ProjectId,
             UserId = member.UserId,
-            UserName = $"{member.User.FirstName} {member.User.LastName}",
+            UserName =
+                $"{user.FirstName} {user.LastName}",
             Role = member.Role,
             JoinedAt = member.JoinedAt
         };
@@ -75,25 +99,48 @@ public class ProjectMemberService : IProjectMemberService
         Guid projectId,
         Guid userId)
     {
-        var member = await _memberRepository.GetAsync(
-            projectId,
-            userId);
+        var project =
+            await _projectRepository.GetByIdAsync(projectId);
+
+        if (project is null)
+        {
+            return false;
+        }
+
+        var currentUserId =
+            _currentUserService.UserId;
+
+        if (currentUserId is null ||
+            project.OwnerId != currentUserId.Value)
+        {
+            throw new UnauthorizedAccessException(
+                "Only the project owner can remove members.");
+        }
+
+        var member =
+            await _memberRepository.GetAsync(
+                projectId,
+                userId);
 
         if (member is null)
+        {
             return false;
+        }
 
         await _memberRepository.DeleteAsync(member);
 
         return true;
     }
 
-    private static ProjectMemberDto MapToDto(ProjectMember member)
+    private static ProjectMemberDto MapToDto(
+        ProjectMember member)
     {
         return new ProjectMemberDto
         {
             ProjectId = member.ProjectId,
             UserId = member.UserId,
-            UserName = $"{member.User.FirstName} {member.User.LastName}",
+            UserName =
+                $"{member.User.FirstName} {member.User.LastName}",
             Role = member.Role,
             JoinedAt = member.JoinedAt
         };

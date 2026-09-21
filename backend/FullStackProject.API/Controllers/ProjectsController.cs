@@ -1,8 +1,7 @@
 using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FullStackProject.API.Controllers;
 
@@ -13,7 +12,8 @@ public class ProjectsController : ControllerBase
 {
     private readonly IProjectService _projectService;
 
-    public ProjectsController(IProjectService projectService)
+    public ProjectsController(
+        IProjectService projectService)
     {
         _projectService = projectService;
     }
@@ -21,9 +21,19 @@ public class ProjectsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<ProjectDto>>> GetAll()
     {
-        var projects = await _projectService.GetAllAsync();
+        try
+        {
+            var projects = await _projectService.GetAllAsync();
 
-        return Ok(projects);
+            return Ok(projects);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new
+            {
+                message = ex.Message
+            });
+        }
     }
 
     [HttpGet("{id:guid}")]
@@ -45,7 +55,8 @@ public class ProjectsController : ControllerBase
     {
         try
         {
-            var project = await _projectService.CreateAsync(request);
+            var project =
+                await _projectService.CreateAsync(request);
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -59,6 +70,13 @@ public class ProjectsController : ControllerBase
                 message = ex.Message
             });
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new
+            {
+                message = ex.Message
+            });
+        }
     }
 
     [HttpPut("{id:guid}")]
@@ -66,26 +84,48 @@ public class ProjectsController : ControllerBase
         Guid id,
         UpdateProjectRequest request)
     {
-        var project = await _projectService.UpdateAsync(id, request);
-
-        if (project == null)
+        try
         {
-            return NotFound();
-        }
+            var project =
+                await _projectService.UpdateAsync(id, request);
 
-        return Ok(project);
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(project);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new
+            {
+                message = ex.Message
+            });
+        }
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var deleted = await _projectService.DeleteAsync(id);
-
-        if (!deleted)
+        try
         {
-            return NotFound();
-        }
+            var deleted =
+                await _projectService.DeleteAsync(id);
 
-        return NoContent();
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new
+            {
+                message = ex.Message
+            });
+        }
     }
 }
