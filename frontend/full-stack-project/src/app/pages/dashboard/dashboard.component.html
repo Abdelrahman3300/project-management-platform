@@ -1,0 +1,90 @@
+<div class="dashboard">
+
+    <h1>Dashboard</h1>
+  
+    @if (loading) {
+      <p>Loading dashboard...</p>
+    }
+  
+    @if (error) {
+      <p class="error">{{ error }}</p>
+    }
+  
+    @if (stats) {
+  
+      <div class="stats-grid">
+  
+        <div class="stat-card">
+          <h3>Projects</h3>
+          <strong>{{ stats.totalProjects }}</strong>
+        </div>
+  
+        <div class="stat-card">
+          <h3>Total Tasks</h3>
+          <strong>{{ stats.totalTasks }}</strong>
+        </div>
+  
+        <div class="stat-card">
+          <h3>To Do</h3>
+          <strong>{{ stats.todoTasks }}</strong>
+        </div>
+  
+        <div class="stat-card">
+          <h3>In Progress</h3>
+          <strong>{{ stats.inProgressTasks }}</strong>
+        </div>
+  
+        <div class="stat-card">
+          <h3>Completed</h3>
+          <strong>{{ stats.completedTasks }}</strong>
+        </div>
+  
+        <div class="stat-card">
+          <h3>Overdue</h3>
+          <strong>{{ stats.overdueTasks }}</strong>
+        </div>
+  
+      </div>
+  
+      <h2>My Projects</h2>
+  
+      <div class="projects">
+  
+        @for (project of stats.projects; track project.projectId) {
+  
+          <div class="project-card">
+  
+            <h3>{{ project.projectName }}</h3>
+  
+            <p>
+              Total Tasks:
+              <strong>{{ project.totalTasks }}</strong>
+            </p>
+  
+            <p>
+              To Do:
+              <strong>{{ project.todoTasks }}</strong>
+            </p>
+  
+            <p>
+              In Progress:
+              <strong>{{ project.inProgressTasks }}</strong>
+            </p>
+  
+            <p>
+              Completed:
+              <strong>{{ project.completedTasks }}</strong>
+            </p>
+  
+            <p>
+              Overdue:
+              <strong>{{ project.overdueTasks }}</strong>
+            </p>
+  
+          </div>
+  
+        }
+  
+      </div>
+    }
+  </div>

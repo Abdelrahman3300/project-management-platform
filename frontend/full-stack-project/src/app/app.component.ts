@@ -26,6 +26,10 @@ export class AppComponent implements OnInit {
   private readonly router = inject(Router);
   readonly authService = inject(AuthService);
 
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
