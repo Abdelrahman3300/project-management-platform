@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,24 +17,38 @@ import { UserService, User } from '../../services/user.service';
 import { TaskItem } from '../../models/task-item';
 import { TaskItemService } from '../../services/task-item.service';
 
+import { Comment } from '../../models/comment';
+import { CommentService } from '../../services/comment.service';
+
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-project-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './project-details.component.html',
   styleUrl: './project-details.component.css'
 })
 export class ProjectDetailsComponent implements OnInit {
 
+  readonly authService = inject(AuthService);
   private readonly projectService = inject(ProjectService);
   private readonly projectMemberService = inject(ProjectMemberService);
-
+  
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   private readonly userService = inject(UserService);
 
   private readonly taskItemService = inject(TaskItemService);
+
+  private readonly commentService = inject(CommentService);
+
+  commentsByTask: Record<string, Comment[]> = {};
+  commentTextByTask: Record<string, string> = {};
+  commentLoading: Record<string, boolean> = {};
+  commentSubmitting: Record<string, boolean> = {};
+  commentError: Record<string, string> = {};
 
   project: Project | null = null;
 
@@ -216,6 +231,13 @@ export class ProjectDetailsComponent implements OnInit {
     this.taskItemService.getByProjectId(projectId).subscribe({
       next: (tasks) => {
         this.tasks = tasks;
+
+        for (const task of tasks) {
+          this.commentsByTask[task.id] = [];
+          this.commentTextByTask[task.id] = '';
+          this.loadComments(task.id);
+        }
+
         this.tasksLoading = false;
       },
       error: (error) => {
@@ -369,6 +391,69 @@ export class ProjectDetailsComponent implements OnInit {
           this.deletingTaskId = null;
         }
       });
+  }
+
+  loadComments(taskId: string): void {
+    this.commentLoading[taskId] = true;
+    this.commentError[taskId] = '';
+  
+    this.commentService.getByTaskId(taskId).subscribe({
+      next: (comments) => {
+        this.commentsByTask[taskId] = comments;
+        this.commentLoading[taskId] = false;
+      },
+      error: () => {
+        this.commentError[taskId] =
+          'Failed to load comments.';
+        this.commentLoading[taskId] = false;
+      }
+    });
+  }
+
+  addComment(taskId: string): void {
+    const content =
+      (this.commentTextByTask[taskId] ?? '').trim();
+  
+    if (!content)
+      return;
+  
+    this.commentSubmitting[taskId] = true;
+    this.commentError[taskId] = '';
+  
+    this.commentService.add(taskId, content).subscribe({
+      next: (comment) => {
+        if (!this.commentsByTask[taskId]) {
+          this.commentsByTask[taskId] = [];
+        }
+  
+        this.commentsByTask[taskId].push(comment);
+  
+        this.commentTextByTask[taskId] = '';
+        this.commentSubmitting[taskId] = false;
+      },
+      error: () => {
+        this.commentError[taskId] =
+          'Failed to add comment.';
+        this.commentSubmitting[taskId] = false;
+      }
+    });
+  }
+
+  deleteComment(
+    taskId: string,
+    commentId: string
+  ): void {
+    this.commentService.delete(commentId).subscribe({
+      next: () => {
+        this.commentsByTask[taskId] =
+          (this.commentsByTask[taskId] ?? [])
+            .filter(comment => comment.id !== commentId);
+      },
+      error: () => {
+        this.commentError[taskId] =
+          'Failed to delete comment.';
+      }
+    });
   }
 
   goBack(): void {

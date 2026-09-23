@@ -601,3 +601,132 @@
   color: #344054;
 }
 
+.comments-section {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #eaecf0;
+}
+
+.comments-section h4 {
+  margin: 0 0 14px;
+  color: #344054;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.comment-card {
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.comment-header strong {
+  color: #344054;
+  font-size: 13px;
+}
+
+.comment-header small {
+  color: #98a2b3;
+  font-size: 11px;
+}
+
+.comment-card p {
+  margin: 0 0 8px;
+  color: #475467;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.comment-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.comment-form textarea {
+  flex: 1;
+  resize: vertical;
+  min-height: 60px;
+  padding: 10px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.comment-form textarea:focus {
+  outline: none;
+  border-color: #98a2b3;
+}
+
+.comment-add-button {
+  align-self: flex-end;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 7px;
+  background: #344054;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.comment-add-button:hover:not(:disabled) {
+  background: #1d2939;
+}
+
+.comment-add-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comment-delete-button {
+  padding: 4px 9px;
+  border: 1px solid #f04438;
+  border-radius: 5px;
+  background: #fff;
+  color: #d92d20;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.comment-delete-button:hover {
+  background: #fef3f2;
+}
+
+.comment-message {
+  margin: 8px 0;
+  color: #98a2b3;
+  font-size: 12px;
+}
+
+.comment-error {
+  margin: 8px 0 0;
+  color: #b42318;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .comment-form {
+    flex-direction: column;
+  }
+
+  .comment-add-button {
+    align-self: stretch;
+  }
+
+  .comment-header {
+    flex-direction: column;
+    gap: 3px;
+  }
+}

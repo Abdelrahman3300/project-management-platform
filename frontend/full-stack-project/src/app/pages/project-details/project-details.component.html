@@ -522,7 +522,92 @@
           </div>
 
         }
+        <div class="comments-section">
 
+          <h4>Comments</h4>
+        
+          @if (commentLoading[task.id]) {
+            <p class="comment-message">
+              Loading comments...
+            </p>
+          }
+        
+          @if (!commentLoading[task.id]) {
+        
+            @for (
+              comment of commentsByTask[task.id];
+              track comment.id
+            ) {
+              <div class="comment-card">
+        
+                <div class="comment-header">
+                  <strong>{{ comment.userName }}</strong>
+        
+                  <small>
+                    {{ comment.createdAt | date:'medium' }}
+                  </small>
+                </div>
+        
+                <p>{{ comment.content }}</p>
+        
+                @if (
+                  comment.userId ===
+                  authService.getCurrentUser()?.userId
+                ) {
+                  <button
+                    type="button"
+                    class="comment-delete-button"
+                    (click)="deleteComment(task.id, comment.id)">
+                    Delete
+                  </button>
+                }
+        
+              </div>
+            }
+        
+            @if (commentsByTask[task.id].length === 0) {
+              <p class="comment-message">
+                No comments yet.
+              </p>
+            }
+          }
+        
+          <div class="comment-form">
+        
+            <textarea
+              [value]="commentTextByTask[task.id]"
+              (input)="commentTextByTask[task.id] =
+                $any($event.target).value"
+              placeholder="Write a comment..."
+              rows="3">
+            </textarea>
+        
+            <button
+              type="button"
+              class="comment-add-button"
+              [disabled]="
+                commentSubmitting[task.id] ||
+                !commentTextByTask[task.id].trim()
+              "
+              (click)="addComment(task.id)">
+        
+              @if (commentSubmitting[task.id]) {
+                Adding...
+              } @else {
+                Add Comment
+              }
+        
+            </button>
+        
+          </div>
+        
+          @if (commentError[task.id]) {
+            <p class="comment-error">
+              {{ commentError[task.id] }}
+            </p>
+          }
+        
+        </div>
       </div>
 
     }
