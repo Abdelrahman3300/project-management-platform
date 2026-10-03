@@ -11,9 +11,6 @@ import { ProjectService } from '../../services/project.service';
 import { ProjectMember } from '../../models/project-member';
 import { ProjectMemberService } from '../../services/project-member.service';
 
-
-import { UserService, User } from '../../services/user.service';
-
 import { TaskItem } from '../../models/task-item';
 import { TaskItemService } from '../../services/task-item.service';
 
@@ -38,11 +35,22 @@ export class ProjectDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  private readonly userService = inject(UserService);
-
   private readonly taskItemService = inject(TaskItemService);
 
   private readonly commentService = inject(CommentService);
+
+
+  members: ProjectMember[] = [];
+
+  memberLoading = false;
+  memberError = '';
+
+  showAddMemberForm = false;
+
+  newMemberUserId = '';
+  newMemberRole = 'Member';
+
+  memberSubmitting = false;
 
   commentsByTask: Record<string, Comment[]> = {};
   commentTextByTask: Record<string, string> = {};
@@ -52,25 +60,15 @@ export class ProjectDetailsComponent implements OnInit {
 
   project: Project | null = null;
 
-  members: ProjectMember[] = [];
-
-  users: User[] = [];
-
   tasks: TaskItem[] = [];
 
   tasksLoading = false;
   tasksError = '';
-
-  selectedUserId = '';
-  selectedRole = 'Member';
-  
+ 
   addingTask = false;
-  addingMember = false;
-  addMemberError = '';
-
-  loading = true;
-  membersLoading = false;
   
+  loading = true;
+ 
   newTaskTitle = '';
   newTaskDescription = '';
   newTaskStatus = 'Todo';
@@ -109,7 +107,6 @@ export class ProjectDetailsComponent implements OnInit {
     this.loadProject(id);
     this.loadMembers(id);
     this.loadTasks(id);
-    this.loadUsers();
     
   }
 
@@ -132,98 +129,110 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   private loadMembers(projectId: string): void {
-
-    this.membersLoading = true;
-    this.membersError = '';
-
-    this.projectMemberService.getByProjectId(projectId).subscribe({
-      next: (members) => {
-        this.members = members;
-        this.membersLoading = false;
-      },
-      error: (error) => {
-        console.error(error);
-        this.membersError = 'Failed to load project members.';
-        this.membersLoading = false;
-      }
-    });
-  }
-
-  removeMember(userId: string): void {
-
-    if (!this.project) {
-      return;
-    }
-
+    this.memberLoading = true;
+    this.memberError = '';
+  
     this.projectMemberService
-      .removeMember(this.project.id, userId)
+      .getMembers(projectId)
       .subscribe({
-        next: () => {
-          this.members = this.members.filter(
-            member => member.userId !== userId
-          );
+        next: (members) => {
+          this.members = members;
+          this.memberLoading = false;
         },
         error: (error) => {
           console.error(error);
-          this.membersError = 'Failed to remove project member.';
+  
+          this.memberError =
+            'Failed to load project members.';
+  
+          this.memberLoading = false;
         }
       });
   }
 
-  private loadUsers(): void {
-
-    this.userService.getAll().subscribe({
-      next: (users) => {
-        this.users = users;
-      },
-      error: (error) => {
-        console.error(error);
-        this.addMemberError = 'Failed to load users.';
-      }
-    });
-  }
-
-  addMember(): void {
-
-    if (!this.project || !this.selectedUserId) {
+  removeMember(userId: string): void {
+    if (!this.project) {
       return;
     }
   
-    this.addingMember = true;
-    this.addMemberError = '';
+    this.projectMemberService
+      .removeMember(this.project.id, userId)
+      .subscribe({
+        next: () => {
+          this.members =
+            this.members.filter(
+              member => member.userId !== userId
+            );
+        },
+  
+        error: (error) => {
+          console.error(error);
+  
+          if (error.status === 403) {
+            this.memberError =
+              'Only the project owner can remove members.';
+          } else {
+            this.memberError =
+              'Failed to remove project member.';
+          }
+        }
+      });
+  }
+
+  addMember(): void {
+    if (!this.project) {
+      return;
+    }
+  
+    const userId = this.newMemberUserId.trim();
+  
+    if (!userId) {
+      return;
+    }
+  
+    this.memberSubmitting = true;
+    this.memberError = '';
   
     this.projectMemberService
       .addMember(
         this.project.id,
-        this.selectedUserId,
-        this.selectedRole
+        {
+          userId,
+          role: this.newMemberRole
+        }
       )
       .subscribe({
         next: (member) => {
-  
           this.members = [
             ...this.members,
             member
           ];
   
-          this.selectedUserId = '';
-          this.selectedRole = 'Member';
-  
-          this.addingMember = false;
+          this.newMemberUserId = '';
+          this.newMemberRole = 'Member';
+          this.showAddMemberForm = false;
+          this.memberSubmitting = false;
         },
   
         error: (error) => {
           console.error(error);
   
-          this.addMemberError =
-            error?.error ||
-            'Failed to add project member.';
+          if (error.status === 403) {
+            this.memberError =
+              'Only the project owner can add members.';
+          } else if (error.status === 400) {
+            this.memberError =
+              'Project or user does not exist, or the user is already a member.';
+          } else {
+            this.memberError =
+              'Failed to add project member.';
+          }
   
-          this.addingMember = false;
+          this.memberSubmitting = false;
         }
       });
   }
-
+  
   private loadTasks(projectId: string): void {
     this.tasksLoading = true;
     this.tasksError = '';
@@ -455,6 +464,8 @@ export class ProjectDetailsComponent implements OnInit {
       }
     });
   }
+
+  
 
   goBack(): void {
     this.router.navigate(['/']);

@@ -142,3 +142,4 @@ D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\n
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.API\obj\Debug\net9.0\FullStackProject.API.sourcelink.json

@@ -17,3 +17,4 @@ D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Infrastructure\
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Infrastructure\obj\Debug\net9.0\FullStackProject.Infrastructure.pdb
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Infrastructure\obj\Debug\net9.0\FullStackProject.Infrastructure.genruntimeconfig.cache
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Infrastructure\obj\Debug\net9.0\ref\FullStackProject.Infrastructure.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Infrastructure\obj\Debug\net9.0\FullStackProject.Infrastructure.sourcelink.json

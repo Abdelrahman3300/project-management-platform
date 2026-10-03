@@ -9,3 +9,4 @@ D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Domain\obj\Debu
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Domain\obj\Debug\net9.0\refint\FullStackProject.Domain.dll
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Domain\obj\Debug\net9.0\FullStackProject.Domain.pdb
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Domain\obj\Debug\net9.0\ref\FullStackProject.Domain.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Domain\obj\Debug\net9.0\FullStackProject.Domain.sourcelink.json

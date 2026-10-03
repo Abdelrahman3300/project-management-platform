@@ -13,3 +13,4 @@ D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Application\obj
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Application\obj\Debug\net9.0\refint\FullStackProject.Application.dll
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Application\obj\Debug\net9.0\FullStackProject.Application.pdb
 D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Application\obj\Debug\net9.0\ref\FullStackProject.Application.dll
+D:\Work\Web Developing\FullStackProject\backend\FullStackProject.Application\obj\Debug\net9.0\FullStackProject.Application.sourcelink.json

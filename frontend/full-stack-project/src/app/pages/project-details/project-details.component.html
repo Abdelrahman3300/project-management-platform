@@ -49,134 +49,25 @@
         </div>
       }
 
-    </div>
+      <div class="members-section">
 
-
-    <!-- Project Members -->
-
-    <div class="members-section">
-
-      <h2>Project Members</h2>
-
-      @if (membersLoading) {
-        <p>Loading members...</p>
-      }
-
-      @if (membersError) {
-        <div class="error">
-          {{ membersError }}
-        </div>
-      }
-
-      @if (!membersLoading && members.length === 0) {
-        <p>No members have been added to this project.</p>
-      }
-
-      @if (!membersLoading && members.length > 0) {
-
-        <div class="members-list">
-
-          @for (member of members; track member.userId) {
-
-            <div class="member-card">
-
-              <div class="member-info">
-
-                <strong>
-                  {{ member.userName }}
-                </strong>
-
-                <span>
-                  {{ member.role }}
-                </span>
-
-                <small>
-                  Joined {{ member.joinedAt | date:'mediumDate' }}
-                </small>
-
-              </div>
-
-              <button
-                type="button"
-                class="remove-button"
-                (click)="removeMember(member.userId)">
-                Remove
-              </button>
-
-            </div>
-
-          }
-
-        </div>
-
-      }
-
-      <div class="add-member-form">
-
-        <h3>Add Member</h3>
+        <div class="members-header">
       
-        <div class="form-row">
+          <div>
+            <h3>Project Members</h3>
       
-          <div class="form-field">
-      
-            <label for="user">
-              User
-            </label>
-      
-            <select
-              id="user"
-              [(ngModel)]="selectedUserId">
-      
-              <option value="">
-                Select a user
-              </option>
-      
-              @for (user of users; track user.id) {
-                <option [value]="user.id">
-                  {{ user.firstName }} {{ user.lastName }}
-                </option>
-              }
-      
-            </select>
-      
+            <p class="members-subtitle">
+              People who have access to this project.
+            </p>
           </div>
-      
-      
-          <div class="form-field">
-      
-            <label for="role">
-              Role
-            </label>
-      
-            <select
-              id="role"
-              [(ngModel)]="selectedRole">
-      
-              <option value="Member">
-                Member
-              </option>
-      
-              <option value="Developer">
-                Developer
-              </option>
-      
-              <option value="Manager">
-                Manager
-              </option>
-      
-            </select>
-      
-          </div>
-      
       
           <button
             type="button"
-            class="add-button"
-            [disabled]="!selectedUserId || addingMember"
-            (click)="addMember()">
+            class="member-add-toggle"
+            (click)="showAddMemberForm = !showAddMemberForm">
       
-            @if (addingMember) {
-              Adding...
+            @if (showAddMemberForm) {
+              Cancel
             } @else {
               Add Member
             }
@@ -185,14 +76,295 @@
       
         </div>
       
-        @if (addMemberError) {
-          <div class="error">
-            {{ addMemberError }}
+        @if (memberLoading) {
+          <p class="member-message">
+            Loading members...
+          </p>
+        }
+      
+        @if (!memberLoading) {
+      
+          @if (members.length === 0) {
+      
+            <p class="member-message">
+              No members have been added to this project yet.
+            </p>
+      
+          } @else {
+      
+            <div class="members-list">
+      
+              @for (member of members; track member.userId) {
+      
+                <div class="member-card">
+      
+                  <div class="member-info">
+      
+                    <strong>
+                      {{ member.userName }}
+                    </strong>
+      
+                    <span class="member-role">
+                      {{ member.role }}
+                    </span>
+      
+                  </div>
+      
+                  @if (
+                    member.userId !==
+                    authService.getCurrentUser()?.userId
+                  ) {
+      
+                    <button
+                      type="button"
+                      class="member-remove-button"
+                      (click)="removeMember(member.userId)">
+      
+                      Remove
+      
+                    </button>
+      
+                  }
+      
+                </div>
+      
+              }
+      
+            </div>
+      
+          }
+      
+        }
+      
+        @if (showAddMemberForm) {
+      
+          <div class="add-member-form">
+      
+            <label for="member-user-id">
+              User ID
+            </label>
+      
+            <input
+              id="member-user-id"
+              type="text"
+              [(ngModel)]="newMemberUserId"
+              placeholder="Enter user GUID">
+      
+            <label for="member-role">
+              Role
+            </label>
+      
+            <select
+              id="member-role"
+              [(ngModel)]="newMemberRole">
+      
+              <option value="Member">
+                Member
+              </option>
+      
+              <option value="Manager">
+                Manager
+              </option>
+      
+            </select>
+      
+            <button
+              type="button"
+              class="member-submit-button"
+              [disabled]="
+                memberSubmitting ||
+                !newMemberUserId.trim()
+              "
+              (click)="addMember()">
+      
+              @if (memberSubmitting) {
+                Adding...
+              } @else {
+                Add Member
+              }
+      
+            </button>
+      
           </div>
+      
+        }
+      
+        @if (memberError) {
+      
+          <p class="member-error">
+            {{ memberError }}
+          </p>
+      
         }
       
       </div>
     </div>
+
+
+    <!-- Project Members -->
+
+    <div class="members-section">
+
+      <div class="members-header">
+    
+        <div>
+          <h3>Project Members</h3>
+    
+          <p class="members-subtitle">
+            People who have access to this project.
+          </p>
+        </div>
+    
+        <button
+          type="button"
+          class="member-add-toggle"
+          (click)="showAddMemberForm = !showAddMemberForm">
+    
+          @if (showAddMemberForm) {
+            Cancel
+          } @else {
+            Add Member
+          }
+    
+        </button>
+    
+      </div>
+    
+    
+      @if (memberLoading) {
+    
+        <p class="member-message">
+          Loading members...
+        </p>
+    
+      }
+    
+    
+      @if (!memberLoading) {
+    
+        @if (members.length === 0) {
+    
+          <p class="member-message">
+            No members have been added to this project yet.
+          </p>
+    
+        }
+    
+    
+        @if (members.length > 0) {
+    
+          <div class="members-list">
+    
+            @for (member of members; track member.userId) {
+    
+              <div class="member-card">
+    
+                <div class="member-info">
+    
+                  <strong>
+                    {{ member.userName }}
+                  </strong>
+    
+                  <span class="member-role">
+                    {{ member.role }}
+                  </span>
+    
+                </div>
+    
+    
+                @if (
+                  member.userId !==
+                  authService.getCurrentUser()?.userId
+                ) {
+    
+                  <button
+                    type="button"
+                    class="member-remove-button"
+                    (click)="removeMember(member.userId)">
+    
+                    Remove
+    
+                  </button>
+    
+                }
+    
+              </div>
+    
+            }
+    
+          </div>
+    
+        }
+    
+      }
+    
+    
+      @if (showAddMemberForm) {
+    
+        <div class="add-member-form">
+    
+          <label for="member-user-id">
+            User ID
+          </label>
+    
+          <input
+            id="member-user-id"
+            type="text"
+            [(ngModel)]="newMemberUserId"
+            placeholder="Enter user GUID">
+    
+    
+          <label for="member-role">
+            Role
+          </label>
+    
+          <select
+            id="member-role"
+            [(ngModel)]="newMemberRole">
+    
+            <option value="Member">
+              Member
+            </option>
+    
+            <option value="Manager">
+              Manager
+            </option>
+    
+          </select>
+    
+    
+          <button
+            type="button"
+            class="member-submit-button"
+            [disabled]="
+              memberSubmitting ||
+              !newMemberUserId.trim()
+            "
+            (click)="addMember()">
+    
+            @if (memberSubmitting) {
+              Adding...
+            } @else {
+              Add Member
+            }
+    
+          </button>
+    
+        </div>
+    
+      }
+    
+    
+      @if (memberError) {
+    
+        <p class="member-error">
+          {{ memberError }}
+        </p>
+    
+      }
+    
+    </div>
+    
     <section class="tasks-section">
 
       <h2>Tasks</h2>
