@@ -42,6 +42,15 @@ export class ProjectDetailsComponent implements OnInit {
 
   members: ProjectMember[] = [];
 
+  isProjectOwner(): boolean {
+    if (!this.project) {
+      return false;
+    }
+  
+    return this.project.ownerId ===
+      this.authService.getCurrentUser()?.userId;
+  }
+  
   memberLoading = false;
   memberError = '';
 

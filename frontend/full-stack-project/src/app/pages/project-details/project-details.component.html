@@ -60,20 +60,20 @@
               People who have access to this project.
             </p>
           </div>
-      
-          <button
-            type="button"
-            class="member-add-toggle"
-            (click)="showAddMemberForm = !showAddMemberForm">
-      
-            @if (showAddMemberForm) {
-              Cancel
-            } @else {
-              Add Member
-            }
-      
-          </button>
-      
+          @if (isProjectOwner()) {
+            <button
+              type="button"
+              class="member-add-toggle"
+              (click)="showAddMemberForm = !showAddMemberForm">
+        
+              @if (showAddMemberForm) {
+                Cancel
+              } @else {
+                Add Member
+              }
+        
+            </button>
+          }
         </div>
       
         @if (memberLoading) {
@@ -136,7 +136,7 @@
       
         }
       
-        @if (showAddMemberForm) {
+        @if (isProjectOwner() && showAddMemberForm) {
       
           <div class="add-member-form">
       
@@ -273,8 +273,8 @@
     
     
                 @if (
-                  member.userId !==
-                  authService.getCurrentUser()?.userId
+                  member.userId !== authService.getCurrentUser()?.userId
+                  && isProjectOwner()
                 ) {
     
                   <button
