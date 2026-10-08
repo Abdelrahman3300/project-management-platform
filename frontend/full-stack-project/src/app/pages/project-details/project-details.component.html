@@ -52,10 +52,10 @@
       <div class="members-section">
 
         <div class="members-header">
-      
+
           <div>
             <h3>Project Members</h3>
-      
+
             <p class="members-subtitle">
               People who have access to this project.
             </p>
@@ -65,109 +65,109 @@
               type="button"
               class="member-add-toggle"
               (click)="showAddMemberForm = !showAddMemberForm">
-        
+
               @if (showAddMemberForm) {
                 Cancel
               } @else {
                 Add Member
               }
-        
+
             </button>
           }
         </div>
-      
+
         @if (memberLoading) {
           <p class="member-message">
             Loading members...
           </p>
         }
-      
+
         @if (!memberLoading) {
-      
+
           @if (members.length === 0) {
-      
+
             <p class="member-message">
               No members have been added to this project yet.
             </p>
-      
+
           } @else {
-      
+
             <div class="members-list">
-      
+
               @for (member of members; track member.userId) {
-      
+
                 <div class="member-card">
-      
+
                   <div class="member-info">
-      
+
                     <strong>
                       {{ member.userName }}
                     </strong>
-      
+
                     <span class="member-role">
                       {{ member.role }}
                     </span>
-      
+
                   </div>
-      
+
                   @if (
                     member.userId !==
                     authService.getCurrentUser()?.userId
                   ) {
-      
+
                     <button
                       type="button"
                       class="member-remove-button"
                       (click)="removeMember(member.userId)">
-      
+
                       Remove
-      
+
                     </button>
-      
+
                   }
-      
+
                 </div>
-      
+
               }
-      
+
             </div>
-      
+
           }
-      
+
         }
-      
+
         @if (isProjectOwner() && showAddMemberForm) {
-      
+
           <div class="add-member-form">
-      
+
             <label for="member-user-id">
               User ID
             </label>
-      
+
             <input
               id="member-user-id"
               type="text"
               [(ngModel)]="newMemberUserId"
               placeholder="Enter user GUID">
-      
+
             <label for="member-role">
               Role
             </label>
-      
+
             <select
               id="member-role"
               [(ngModel)]="newMemberRole">
-      
+
               <option value="Member">
                 Member
               </option>
-      
+
               <option value="Manager">
                 Manager
               </option>
-      
+
             </select>
-      
+
             <button
               type="button"
               class="member-submit-button"
@@ -176,619 +176,508 @@
                 !newMemberUserId.trim()
               "
               (click)="addMember()">
-      
+
               @if (memberSubmitting) {
                 Adding...
               } @else {
                 Add Member
               }
-      
+
             </button>
-      
+
           </div>
-      
+
         }
-      
+
         @if (memberError) {
-      
+
           <p class="member-error">
             {{ memberError }}
           </p>
-      
+
         }
-      
+
       </div>
     </div>
 
 
     <!-- Project Members -->
 
-    <div class="members-section">
 
-      <div class="members-header">
-    
+    <div class="tasks-section">
+
+      <div class="tasks-header">
         <div>
-          <h3>Project Members</h3>
-    
-          <p class="members-subtitle">
-            People who have access to this project.
+          <h2>Tasks</h2>
+          <p class="tasks-subtitle">
+            Manage tasks for this project
           </p>
         </div>
-    
-        <button
-          type="button"
-          class="member-add-toggle"
-          (click)="showAddMemberForm = !showAddMemberForm">
-    
-          @if (showAddMemberForm) {
-            Cancel
-          } @else {
-            Add Member
-          }
-    
-        </button>
-    
       </div>
-    
-    
-      @if (memberLoading) {
-    
-        <p class="member-message">
-          Loading members...
-        </p>
-    
-      }
-    
-    
-      @if (!memberLoading) {
-    
-        @if (members.length === 0) {
-    
-          <p class="member-message">
-            No members have been added to this project yet.
-          </p>
-    
-        }
-    
-    
-        @if (members.length > 0) {
-    
-          <div class="members-list">
-    
-            @for (member of members; track member.userId) {
-    
-              <div class="member-card">
-    
-                <div class="member-info">
-    
-                  <strong>
-                    {{ member.userName }}
-                  </strong>
-    
-                  <span class="member-role">
-                    {{ member.role }}
-                  </span>
-    
-                </div>
-    
-    
-                @if (
-                  member.userId !== authService.getCurrentUser()?.userId
-                  && isProjectOwner()
-                ) {
-    
-                  <button
-                    type="button"
-                    class="member-remove-button"
-                    (click)="removeMember(member.userId)">
-    
-                    Remove
-    
-                  </button>
-    
-                }
-    
-              </div>
-    
-            }
-    
-          </div>
-    
-        }
-    
-      }
-    
-    
-      @if (showAddMemberForm) {
-    
-        <div class="add-member-form">
-    
-          <label for="member-user-id">
-            User ID
-          </label>
-    
-          <input
-            id="member-user-id"
-            type="text"
-            [(ngModel)]="newMemberUserId"
-            placeholder="Enter user GUID">
-    
-    
-          <label for="member-role">
-            Role
-          </label>
-    
-          <select
-            id="member-role"
-            [(ngModel)]="newMemberRole">
-    
-            <option value="Member">
-              Member
-            </option>
-    
-            <option value="Manager">
-              Manager
-            </option>
-    
-          </select>
-    
-    
-          <button
-            type="button"
-            class="member-submit-button"
-            [disabled]="
-              memberSubmitting ||
-              !newMemberUserId.trim()
-            "
-            (click)="addMember()">
-    
-            @if (memberSubmitting) {
-              Adding...
-            } @else {
-              Add Member
-            }
-    
-          </button>
-    
-        </div>
-    
-      }
-    
-    
-      @if (memberError) {
-    
-        <p class="member-error">
-          {{ memberError }}
-        </p>
-    
-      }
-    
-    </div>
-    
-    <section class="tasks-section">
 
-      <h2>Tasks</h2>
-    
+      <!-- Add Task form stays here -->
+
       @if (tasksLoading) {
-        <p>Loading tasks...</p>
-      }
-    
-      @if (tasksError) {
-        <div class="error">
-          {{ tasksError }}
+        <div class="tasks-loading">
+          Loading tasks...
         </div>
       }
-    
-      @if (!tasksLoading && !tasksError && tasks.length === 0) {
-        <p>No tasks found for this project.</p>
+
+      @if (!tasksLoading && tasks.length === 0) {
+        <div class="tasks-empty">
+          <div class="tasks-empty-title">
+            No tasks yet
+          </div>
+          <p>
+            Create the first task for this project.
+          </p>
+        </div>
       }
-    
+
       <div class="add-task-form">
 
-        <h3>Add Task</h3>
-      
-        @if (addTaskError) {
-          <div class="error">
-            {{ addTaskError }}
-          </div>
-        }
-      
-        <div class="task-form-grid">
-      
-          <div class="form-field">
-            <label for="taskTitle">Title</label>
-      
-            <input
-              id="taskTitle"
-              type="text"
-              [(ngModel)]="newTaskTitle"
-              placeholder="Task title">
-          </div>
-      
-          <div class="form-field">
-            <label for="taskDescription">Description</label>
-      
-            <input
-              id="taskDescription"
-              type="text"
-              [(ngModel)]="newTaskDescription"
-              placeholder="Task description">
-          </div>
-      
-          <div class="form-field">
-            <label for="taskStatus">Status</label>
-      
-            <select
-              id="taskStatus"
-              [(ngModel)]="newTaskStatus">
-      
-              <option value="Todo">Todo</option>
-              <option value="InProgress">In Progress</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
-      
-            </select>
-          </div>
-      
-          <div class="form-field">
-            <label for="taskPriority">Priority</label>
-      
-            <select
-              id="taskPriority"
-              [(ngModel)]="newTaskPriority">
-      
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-      
-            </select>
-          </div>
-      
-          <div class="form-field">
-            <label for="taskDueDate">Due Date</label>
-      
-            <input
-              id="taskDueDate"
-              type="date"
-              [(ngModel)]="newTaskDueDate">
-          </div>
-          <div class="form-field">
-            <label for="taskAssignedTo">Assigned To</label>
-          
-            <select
-              id="taskAssignedTo"
-              [(ngModel)]="newTaskAssignedToUserId">
-          
-              <option value="">
-                Unassigned
-              </option>
-          
-              @for (member of members; track member.userId) {
-                <option [value]="member.userId">
-                  {{ member.userName }}
-                </option>
-              }
-          
-            </select>
-          </div>
+      <h3>Add Task</h3>
+
+      <div class="task-form-grid">
+
+        <div class="form-field">
+          <label for="task-title">
+            Title
+          </label>
+
+          <input
+            id="task-title"
+            type="text"
+            [(ngModel)]="newTaskTitle"
+            placeholder="Task title">
         </div>
-      
-        <button
-          class="add-button"
-          type="button"
-          [disabled]="addingTask || !newTaskTitle.trim()"
-          (click)="addTask()">
-      
-          @if (addingTask) {
-            Adding...
-          } @else {
-            Add Task
-          }
-      
-        </button>
-        
+
+        <div class="form-field">
+          <label for="task-description">
+            Description
+          </label>
+
+          <textarea
+            id="task-description"
+            [(ngModel)]="newTaskDescription"
+            placeholder="Task description"
+            rows="3">
+          </textarea>
+        </div>
+
+        <div class="form-field">
+          <label for="task-status">
+            Status
+          </label>
+
+          <select
+            id="task-status"
+            [(ngModel)]="newTaskStatus">
+
+            <option value="Todo">
+              Todo
+            </option>
+
+            <option value="InProgress">
+              In Progress
+            </option>
+
+            <option value="Completed">
+              Completed
+            </option>
+
+            <option value="Cancelled">
+              Cancelled
+            </option>
+
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="task-priority">
+            Priority
+          </label>
+
+          <select
+            id="task-priority"
+            [(ngModel)]="newTaskPriority">
+
+            <option value="Low">
+              Low
+            </option>
+
+            <option value="Medium">
+              Medium
+            </option>
+
+            <option value="High">
+              High
+            </option>
+
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="task-due-date">
+            Due Date
+          </label>
+
+          <input
+            id="task-due-date"
+            type="date"
+            [(ngModel)]="newTaskDueDate">
+        </div>
+
+        <div class="form-field">
+          <label for="task-assignee">
+            Assigned To
+          </label>
+
+          <select
+            id="task-assignee"
+            [(ngModel)]="newTaskAssignedToUserId">
+
+            <option value="">
+              Unassigned
+            </option>
+
+            @for (member of members; track member.userId) {
+              <option [value]="member.userId">
+                {{ member.userName }}
+              </option>
+            }
+
+          </select>
+        </div>
+
       </div>
+
+      @if (addTaskError) {
+        <p class="task-error">
+          {{ addTaskError }}
+        </p>
+      }
+
+      <button
+        type="button"
+        class="add-task-button"
+        [disabled]="
+          addingTask ||
+          !newTaskTitle.trim()
+        "
+        (click)="addTask()">
+
+        @if (addingTask) {
+          Adding...
+        } @else {
+          Add Task
+        }
+
+      </button>
+
+    </div>
 
       @if (!tasksLoading && tasks.length > 0) {
 
-  @if (taskActionError) {
-    <div class="error">
-      {{ taskActionError }}
-    </div>
-  }
+        <div class="tasks-list">
 
-  <div class="tasks-list">
+          @for (task of tasks; track task.id) {
 
-    @for (task of tasks; track task.id) {
+            <div
+              class="task-card"
+              [class.task-card-overdue]="isTaskOverdue(task)">
 
-      <div class="task-card">
+              @if (editingTaskId === task.id) {
 
-        @if (editingTaskId === task.id) {
+                <!-- EDIT MODE -->
 
-          <!-- EDIT MODE -->
+                <div class="edit-task-form">
 
-          <div class="edit-task-form">
+                  <h3>Edit Task</h3>
 
-            <h3>Edit Task</h3>
+                  <div class="task-form-grid">
 
-            <div class="task-form-grid">
+                    <div class="form-field">
+                      <label for="editTaskTitle-{{ task.id }}">Title</label>
+                      <input
+                        id="editTaskTitle-{{ task.id }}"
+                        type="text"
+                        [(ngModel)]="editTaskTitle">
+                    </div>
 
-              <div class="form-field">
-                <label>Title</label>
+                    <div class="form-field">
+                      <label for="editTaskDescription-{{ task.id }}">Description</label>
+                      <input
+                        id="editTaskDescription-{{ task.id }}"
+                        type="text"
+                        [(ngModel)]="editTaskDescription">
+                    </div>
 
-                <input
-                  type="text"
-                  [(ngModel)]="editTaskTitle">
-              </div>
+                    <div class="form-field">
+                      <label for="editTaskStatus-{{ task.id }}">Status</label>
+                      <select
+                        id="editTaskStatus-{{ task.id }}"
+                        [(ngModel)]="editTaskStatus">
+                        <option value="Todo">Todo</option>
+                        <option value="InProgress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </div>
 
-              <div class="form-field">
-                <label>Description</label>
+                    <div class="form-field">
+                      <label for="editTaskPriority-{{ task.id }}">Priority</label>
+                      <select
+                        id="editTaskPriority-{{ task.id }}"
+                        [(ngModel)]="editTaskPriority">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                      </select>
+                    </div>
 
-                <input
-                  type="text"
-                  [(ngModel)]="editTaskDescription">
-              </div>
+                    <div class="form-field">
+                      <label for="editTaskDueDate-{{ task.id }}">Due Date</label>
+                      <input
+                        id="editTaskDueDate-{{ task.id }}"
+                        type="date"
+                        [(ngModel)]="editTaskDueDate">
+                    </div>
 
-              <div class="form-field">
-                <label>Status</label>
+                    <div class="form-field">
+                      <label for="editTaskAssignedTo-{{ task.id }}">Assigned To</label>
+                      <select
+                        id="editTaskAssignedTo-{{ task.id }}"
+                        [(ngModel)]="editTaskAssignedToUserId">
+                        <option value="">Unassigned</option>
+                        @for (member of members; track member.userId) {
+                          <option [value]="member.userId">
+                            {{ member.userName }}
+                          </option>
+                        }
+                      </select>
+                    </div>
 
-                <select [(ngModel)]="editTaskStatus">
-                  <option value="Todo">Todo</option>
-                  <option value="InProgress">In Progress</option>
-                  <option value="Completed">Completed</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
-              </div>
+                  </div>
 
-              <div class="form-field">
-                <label>Priority</label>
+                  <div class="edit-actions">
 
-                <select [(ngModel)]="editTaskPriority">
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                </select>
-              </div>
+                    <button
+                      class="save-button"
+                      type="button"
+                      [disabled]="updatingTask || !editTaskTitle.trim()"
+                      (click)="updateTask()">
 
-              <div class="form-field">
-                <label>Due Date</label>
+                      @if (updatingTask) {
+                        Saving...
+                      } @else {
+                        Save Changes
+                      }
 
-                <input
-                  type="date"
-                  [(ngModel)]="editTaskDueDate">
-              </div>
+                    </button>
 
-            </div>
+                    <button
+                      class="cancel-button"
+                      type="button"
+                      [disabled]="updatingTask"
+                      (click)="cancelEditTask()">
+                      Cancel
+                    </button>
 
-            <div class="edit-actions">
+                  </div>
 
-              <button
-                class="save-button"
-                type="button"
-                [disabled]="updatingTask || !editTaskTitle.trim()"
-                (click)="updateTask()">
-
-                @if (updatingTask) {
-                  Saving...
-                } @else {
-                  Save Changes
-                }
-
-              </button>
-
-              <button
-                class="cancel-button"
-                type="button"
-                [disabled]="updatingTask"
-                (click)="cancelEditTask()">
-
-                Cancel
-
-              </button>
-
-            </div>
-
-            <div class="form-field">
-              <label for="editTaskAssignedTo">
-                Assigned To
-              </label>
-            
-              <select
-                id="editTaskAssignedTo"
-                [(ngModel)]="editTaskAssignedToUserId">
-            
-                <option value="">
-                  Unassigned
-                </option>
-            
-                @for (member of members; track member.userId) {
-                  <option [value]="member.userId">
-                    {{ member.userName }}
-                  </option>
-                }
-            
-              </select>
-            </div>
-          </div>
-
-        } @else {
-
-          <!-- NORMAL MODE -->
-
-          <div class="task-info">
-
-            <h3>{{ task.title }}</h3>
-
-            @if (task.description) {
-              <p>{{ task.description }}</p>
-            }
-
-            <div class="task-meta">
-
-              <span
-                class="status-badge"
-                [class.status-todo]="task.status === 'Todo'"
-                [class.status-progress]="task.status === 'InProgress'"
-                [class.status-completed]="task.status === 'Completed'"
-                [class.status-cancelled]="task.status === 'Cancelled'">
-            
-                {{ task.status }}
-            
-              </span>
-            
-              <span
-                class="priority-badge"
-                [class.priority-low]="task.priority === 'Low'"
-                [class.priority-medium]="task.priority === 'Medium'"
-                [class.priority-high]="task.priority === 'High'">
-            
-                {{ task.priority }}
-            
-              </span>
-            
-              <span class="task-assignee">
-                Assigned to:
-                <strong>
-                  {{ task.assignedToUserName || 'Unassigned' }}
-                </strong>
-              </span>
-            
-              @if (task.dueDate) {
-                <span class="task-due-date">
-                  Due:
-                  <strong>
-                    {{ task.dueDate | date:'mediumDate' }}
-                  </strong>
-                </span>
-              }
-            
-            </div>
-
-          </div>
-
-          <div class="task-actions">
-
-            <button
-              class="edit-button"
-              type="button"
-              (click)="startEditTask(task)">
-
-              Edit
-
-            </button>
-
-            <button
-              class="delete-button"
-              type="button"
-              [disabled]="deletingTaskId === task.id"
-              (click)="deleteTask(task.id)">
-
-              @if (deletingTaskId === task.id) {
-                Deleting...
-              } @else {
-                Delete
-              }
-
-            </button>
-
-          </div>
-
-        }
-        <div class="comments-section">
-
-          <h4>Comments</h4>
-        
-          @if (commentLoading[task.id]) {
-            <p class="comment-message">
-              Loading comments...
-            </p>
-          }
-        
-          @if (!commentLoading[task.id]) {
-        
-            @for (
-              comment of commentsByTask[task.id];
-              track comment.id
-            ) {
-              <div class="comment-card">
-        
-                <div class="comment-header">
-                  <strong>{{ comment.userName }}</strong>
-        
-                  <small>
-                    {{ comment.createdAt | date:'medium' }}
-                  </small>
                 </div>
-        
-                <p>{{ comment.content }}</p>
-        
-                @if (
-                  comment.userId ===
-                  authService.getCurrentUser()?.userId
-                ) {
+
+              } @else {
+
+                <!-- NORMAL MODE -->
+
+                <div class="task-main">
+
+                  <div class="task-info">
+
+                    <h3>{{ task.title }}</h3>
+
+                    @if (task.description) {
+                      <p>{{ task.description }}</p>
+                    }
+
+                    <div class="task-badges">
+
+                      <span
+                        class="status-badge"
+                        [class]="getTaskStatusClass(task.status)">
+                        {{ task.status }}
+                      </span>
+
+                      <span
+                        class="priority-badge"
+                        [class]="getTaskPriorityClass(task.priority)">
+                        {{ task.priority }}
+                      </span>
+
+                    </div>
+
+                    <div class="task-meta">
+
+                      <div class="task-assignee">
+                        <strong>Assigned To:</strong>
+                        {{ task.assignedToUserName || 'Unassigned' }}
+                      </div>
+
+                      @if (task.dueDate) {
+                        <div
+                          class="task-due-date"
+                          [class]="getTaskDueDateClass(task)">
+
+                          <strong>Due:</strong>
+                          {{ task.dueDate | date:'mediumDate' }}
+
+                          @if (isTaskOverdue(task)) {
+                            <span class="overdue-label">Overdue</span>
+                          }
+
+                        </div>
+                      }
+
+                    </div>
+
+                  </div>
+
+                  <div class="task-actions">
+
+                    <button
+                      type="button"
+                      class="edit-button"
+                      (click)="startEditTask(task)">
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      class="delete-button"
+                      [disabled]="deletingTaskId === task.id"
+                      (click)="deleteTask(task.id)">
+
+                      @if (deletingTaskId === task.id) {
+                        Deleting...
+                      } @else {
+                        Delete
+                      }
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+              }
+
+              <!-- COMMENTS (always visible, in both modes) -->
+
+              <div class="comments-section">
+
+                <h4>Comments</h4>
+
+                @if (commentLoading[task.id]) {
+                  <p class="comment-message">
+                    Loading comments...
+                  </p>
+                }
+
+                @if (!commentLoading[task.id]) {
+
+                  @for (comment of commentsByTask[task.id]; track comment.id) {
+
+                    <div class="comment-card">
+
+                      <div class="comment-header">
+                        <strong>{{ comment.userName }}</strong>
+                        <small>
+                          {{ comment.createdAt | date:'medium' }}
+                        </small>
+                      </div>
+
+                      <p>{{ comment.content }}</p>
+
+                      @if (comment.userId === authService.getCurrentUser()?.userId) {
+                        <button
+                          type="button"
+                          class="comment-delete-button"
+                          (click)="deleteComment(task.id, comment.id)">
+                          Delete
+                        </button>
+                      }
+
+                    </div>
+
+                  }
+
+                  @if (!commentsByTask[task.id].length) {
+                    <p class="comment-message">
+                      No comments yet.
+                    </p>
+                  }
+
+                }
+
+                <div class="comment-form">
+
+                  <textarea
+                    [value]="commentTextByTask[task.id] || ''"
+                    (input)="commentTextByTask[task.id] = $any($event.target).value"
+                    placeholder="Write a comment..."
+                    rows="3">
+                  </textarea>
+
                   <button
                     type="button"
-                    class="comment-delete-button"
-                    (click)="deleteComment(task.id, comment.id)">
-                    Delete
+                    class="comment-add-button"
+                    [disabled]="
+                      commentSubmitting[task.id] ||
+                      !(commentTextByTask[task.id] || '').trim()
+                    "
+                    (click)="addComment(task.id)">
+
+                    @if (commentSubmitting[task.id]) {
+                      Adding...
+                    } @else {
+                      Add Comment
+                    }
+
                   </button>
+
+                </div>
+
+                @if (commentError[task.id]) {
+                  <p class="comment-error">
+                    {{ commentError[task.id] }}
+                  </p>
                 }
-        
+
               </div>
-            }
-        
-            @if (commentsByTask[task.id].length === 0) {
-              <p class="comment-message">
-                No comments yet.
-              </p>
-            }
+
+            </div>
+
           }
-        
-          <div class="comment-form">
-        
-            <textarea
-              [value]="commentTextByTask[task.id]"
-              (input)="commentTextByTask[task.id] =
-                $any($event.target).value"
-              placeholder="Write a comment..."
-              rows="3">
-            </textarea>
-        
-            <button
-              type="button"
-              class="comment-add-button"
-              [disabled]="
-                commentSubmitting[task.id] ||
-                !commentTextByTask[task.id].trim()
-              "
-              (click)="addComment(task.id)">
-        
-              @if (commentSubmitting[task.id]) {
-                Adding...
-              } @else {
-                Add Comment
-              }
-        
-            </button>
-        
-          </div>
-        
-          @if (commentError[task.id]) {
-            <p class="comment-error">
-              {{ commentError[task.id] }}
-            </p>
-          }
-        
+
         </div>
-      </div>
 
-    }
+      }
 
-  </div>
-}
-      
-      
-    </section>
+      @if (tasksError) {
+        <p class="task-error">
+          {{ tasksError }}
+        </p>
+      }
+
+      @if (taskActionError) {
+        <p class="task-error">
+          {{ taskActionError }}
+        </p>
+      }
+
+    </div>
   }
 
 </div>

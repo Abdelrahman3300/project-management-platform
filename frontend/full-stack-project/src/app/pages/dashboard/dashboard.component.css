@@ -56,3 +56,18 @@
       grid-template-columns: 1fr;
     }
   }
+
+  .dashboard-project-button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 7px;
+    background: #344054;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .dashboard-project-button:hover {
+    background: #1d2939;
+  }

@@ -4,6 +4,7 @@ import {
   DashboardStats,
   ProjectStats
 } from '../../models/dashboard-stats';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +15,8 @@ import {
 export class DashboardComponent implements OnInit {
   private readonly dashboardService =
     inject(DashboardService);
-
+  
+  private readonly router = inject(Router);
   stats: DashboardStats | null = null;
 
   loading = true;
@@ -40,5 +42,9 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  openProject(projectId: string): void {
+    this.router.navigate(['/projects', projectId]);
   }
 }

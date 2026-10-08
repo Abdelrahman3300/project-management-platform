@@ -80,6 +80,15 @@
               Overdue:
               <strong>{{ project.overdueTasks }}</strong>
             </p>
+
+            <button
+              type="button"
+              class="dashboard-project-button"
+              (click)="openProject(project.projectId)">
+
+              Open Project
+
+            </button>
   
           </div>
   

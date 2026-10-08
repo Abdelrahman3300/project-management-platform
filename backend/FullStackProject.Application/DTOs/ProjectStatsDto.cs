@@ -17,4 +17,6 @@ public class ProjectStatsDto
     public int CancelledTasks { get; set; }
 
     public int OverdueTasks { get; set; }
+
+    public int CompletionPercentage { get; set; }
 }
