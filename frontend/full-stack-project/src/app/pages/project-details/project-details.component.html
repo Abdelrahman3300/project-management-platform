@@ -215,6 +215,146 @@
         </div>
       </div>
 
+      <div class="task-filters">
+
+        <div class="task-filter-header">
+      
+          <div>
+            <h3>Find Tasks</h3>
+      
+            <p>
+              Search and filter tasks in this project.
+            </p>
+          </div>
+      
+          @if (hasTaskFilters()) {
+            <button
+              type="button"
+              class="clear-filters-button"
+              (click)="clearTaskFilters()">
+              Clear Filters
+            </button>
+          }
+      
+        </div>
+      
+        <div class="task-filter-grid">
+      
+          <div class="filter-field filter-search">
+      
+            <label for="task-search">
+              Search
+            </label>
+      
+            <input
+              id="task-search"
+              type="text"
+              [(ngModel)]="taskSearchTerm"
+              placeholder="Search title or description...">
+      
+          </div>
+      
+          <div class="filter-field">
+      
+            <label for="task-status-filter">
+              Status
+            </label>
+      
+            <select
+              id="task-status-filter"
+              [(ngModel)]="taskStatusFilter">
+      
+              <option value="">
+                All statuses
+              </option>
+      
+              <option value="Todo">
+                Todo
+              </option>
+      
+              <option value="InProgress">
+                In Progress
+              </option>
+      
+              <option value="Completed">
+                Completed
+              </option>
+      
+              <option value="Cancelled">
+                Cancelled
+              </option>
+      
+            </select>
+      
+          </div>
+      
+          <div class="filter-field">
+      
+            <label for="task-priority-filter">
+              Priority
+            </label>
+      
+            <select
+              id="task-priority-filter"
+              [(ngModel)]="taskPriorityFilter">
+      
+              <option value="">
+                All priorities
+              </option>
+      
+              <option value="Low">
+                Low
+              </option>
+      
+              <option value="Medium">
+                Medium
+              </option>
+      
+              <option value="High">
+                High
+              </option>
+      
+            </select>
+      
+          </div>
+      
+          <div class="filter-field">
+      
+            <label for="task-assignee-filter">
+              Assigned To
+            </label>
+      
+            <select
+              id="task-assignee-filter"
+              [(ngModel)]="taskAssigneeFilter">
+      
+              <option value="">
+                Everyone
+              </option>
+      
+              @for (member of members; track member.userId) {
+                <option [value]="member.userId">
+                  {{ member.userName }}
+                </option>
+              }
+      
+            </select>
+      
+          </div>
+      
+        </div>
+      
+        <div class="task-filter-result">
+      
+          Showing
+          <strong>{{ filteredTasks.length }}</strong>
+          of
+          <strong>{{ tasks.length }}</strong>
+          tasks
+      
+        </div>
+      
+      </div>
       <!-- Add Task form stays here -->
 
       @if (tasksLoading) {
@@ -227,6 +367,30 @@
         <div class="tasks-empty">
           <div class="tasks-empty-title">
             No tasks yet
+            @if (
+  !tasksLoading &&
+  tasks.length > 0 &&
+  filteredTasks.length === 0
+) {
+  <div class="tasks-empty">
+
+    <div class="tasks-empty-title">
+      No matching tasks
+    </div>
+
+    <p>
+      Try changing or clearing your filters.
+    </p>
+
+    <button
+      type="button"
+      class="clear-filters-button"
+      (click)="clearTaskFilters()">
+      Clear Filters
+    </button>
+
+  </div>
+}
           </div>
           <p>
             Create the first task for this project.
@@ -377,11 +541,14 @@
 
     </div>
 
-      @if (!tasksLoading && tasks.length > 0) {
+    @if (
+      !tasksLoading &&
+      filteredTasks.length > 0
+    ) {
 
         <div class="tasks-list">
 
-          @for (task of tasks; track task.id) {
+          @for (task of filteredTasks; track task.id) {
 
             <div
               class="task-card"

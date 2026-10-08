@@ -74,6 +74,11 @@ export class ProjectDetailsComponent implements OnInit {
   tasksLoading = false;
   tasksError = '';
 
+  taskSearchTerm = '';
+  taskStatusFilter = '';
+  taskPriorityFilter = '';
+  taskAssigneeFilter = '';
+
   addingTask = false;
 
   loading = true;
@@ -117,6 +122,56 @@ export class ProjectDetailsComponent implements OnInit {
     this.loadMembers(id);
     this.loadTasks(id);
 
+  }
+
+  get filteredTasks(): TaskItem[] {
+    const searchTerm =
+      this.taskSearchTerm.trim().toLowerCase();
+  
+    return this.tasks.filter(task => {
+  
+      const matchesSearch =
+        !searchTerm ||
+        task.title.toLowerCase().includes(searchTerm) ||
+        (task.description ?? '')
+          .toLowerCase()
+          .includes(searchTerm);
+  
+      const matchesStatus =
+        !this.taskStatusFilter ||
+        task.status === this.taskStatusFilter;
+  
+      const matchesPriority =
+        !this.taskPriorityFilter ||
+        task.priority === this.taskPriorityFilter;
+  
+      const matchesAssignee =
+        !this.taskAssigneeFilter ||
+        task.assignedToUserId === this.taskAssigneeFilter;
+  
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesPriority &&
+        matchesAssignee
+      );
+    });
+  }
+
+  hasTaskFilters(): boolean {
+    return !!(
+      this.taskSearchTerm.trim() ||
+      this.taskStatusFilter ||
+      this.taskPriorityFilter ||
+      this.taskAssigneeFilter
+    );
+  }
+
+  clearTaskFilters(): void {
+    this.taskSearchTerm = '';
+    this.taskStatusFilter = '';
+    this.taskPriorityFilter = '';
+    this.taskAssigneeFilter = '';
   }
 
   private loadProject(id: string): void {
