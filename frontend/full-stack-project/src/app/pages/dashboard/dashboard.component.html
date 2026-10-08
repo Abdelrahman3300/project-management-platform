@@ -1,99 +1,197 @@
-<div class="dashboard">
+<div class="dashboard-container">
 
-    <h1>Dashboard</h1>
-  
-    @if (loading) {
-      <p>Loading dashboard...</p>
-    }
-  
-    @if (error) {
-      <p class="error">{{ error }}</p>
-    }
-  
-    @if (stats) {
-  
-      <div class="stats-grid">
-  
-        <div class="stat-card">
-          <h3>Projects</h3>
-          <strong>{{ stats.totalProjects }}</strong>
-        </div>
-  
-        <div class="stat-card">
-          <h3>Total Tasks</h3>
-          <strong>{{ stats.totalTasks }}</strong>
-        </div>
-  
-        <div class="stat-card">
-          <h3>To Do</h3>
-          <strong>{{ stats.todoTasks }}</strong>
-        </div>
-  
-        <div class="stat-card">
-          <h3>In Progress</h3>
-          <strong>{{ stats.inProgressTasks }}</strong>
-        </div>
-  
-        <div class="stat-card">
-          <h3>Completed</h3>
-          <strong>{{ stats.completedTasks }}</strong>
-        </div>
-  
-        <div class="stat-card">
-          <h3>Overdue</h3>
-          <strong>{{ stats.overdueTasks }}</strong>
-        </div>
-  
-      </div>
-  
-      <h2>My Projects</h2>
-  
-      <div class="projects">
-  
-        @for (project of stats.projects; track project.projectId) {
-  
-          <div class="project-card">
-  
-            <h3>{{ project.projectName }}</h3>
-  
-            <p>
-              Total Tasks:
-              <strong>{{ project.totalTasks }}</strong>
-            </p>
-  
-            <p>
-              To Do:
-              <strong>{{ project.todoTasks }}</strong>
-            </p>
-  
-            <p>
-              In Progress:
-              <strong>{{ project.inProgressTasks }}</strong>
-            </p>
-  
-            <p>
-              Completed:
-              <strong>{{ project.completedTasks }}</strong>
-            </p>
-  
-            <p>
-              Overdue:
-              <strong>{{ project.overdueTasks }}</strong>
-            </p>
-
-            <button
-              type="button"
-              class="dashboard-project-button"
-              (click)="openProject(project.projectId)">
-
-              Open Project
-
-            </button>
-  
-          </div>
-  
-        }
-  
-      </div>
-    }
+  <div class="dashboard-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Overview of your projects and tasks</p>
+    </div>
   </div>
+
+  @if (loading) {
+    <div class="dashboard-state">
+      Loading dashboard...
+    </div>
+  }
+
+  @if (error) {
+    <div class="dashboard-error">
+      {{ error }}
+    </div>
+  }
+
+  @if (!loading && !error && stats) {
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+        <span class="summary-label">
+          Total Projects
+        </span>
+
+        <strong class="summary-value">
+          {{ stats.totalProjects }}
+        </strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="summary-label">
+          Total Tasks
+        </span>
+
+        <strong class="summary-value">
+          {{ stats.totalTasks }}
+        </strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="summary-label">
+          Completed
+        </span>
+
+        <strong class="summary-value">
+          {{ stats.completedTasks }}
+        </strong>
+      </div>
+
+      <div class="summary-card overdue-summary">
+        <span class="summary-label">
+          Overdue
+        </span>
+
+        <strong class="summary-value">
+          {{ stats.overdueTasks }}
+        </strong>
+      </div>
+
+    </div>
+
+    <div class="task-overview">
+
+      <div class="overview-card">
+        <span>Todo</span>
+        <strong>{{ stats.todoTasks }}</strong>
+      </div>
+
+      <div class="overview-card">
+        <span>In Progress</span>
+        <strong>{{ stats.inProgressTasks }}</strong>
+      </div>
+
+      <div class="overview-card">
+        <span>Completed</span>
+        <strong>{{ stats.completedTasks }}</strong>
+      </div>
+
+      <div class="overview-card">
+        <span>Cancelled</span>
+        <strong>{{ stats.cancelledTasks }}</strong>
+      </div>
+
+    </div>
+
+    <section class="projects-section">
+
+      <div class="section-header">
+        <div>
+          <h2>Projects</h2>
+          <p>Your project progress</p>
+        </div>
+      </div>
+
+      @if (stats.projects.length === 0) {
+
+        <div class="empty-projects">
+          <h3>No projects yet</h3>
+          <p>
+            Create a project to start managing tasks.
+          </p>
+        </div>
+
+      } @else {
+
+        <div class="project-grid">
+
+          @for (
+            project of stats.projects;
+            track project.projectId
+          ) {
+
+            <div class="project-card">
+
+              <div class="project-card-header">
+
+                <div>
+                  <h3>
+                    {{ project.projectName }}
+                  </h3>
+
+                  <span>
+                    {{ project.totalTasks }} tasks
+                  </span>
+                </div>
+
+                <strong class="completion-value">
+                  {{ project.completionPercentage }}%
+                </strong>
+
+              </div>
+
+              <div class="progress-bar">
+
+                <div
+                  class="progress-fill"
+                  [style.width.%]="
+                    project.completionPercentage
+                  ">
+                </div>
+
+              </div>
+
+              <div class="project-stats">
+
+                <span>
+                  Todo:
+                  <strong>{{ project.todoTasks }}</strong>
+                </span>
+
+                <span>
+                  In Progress:
+                  <strong>{{ project.inProgressTasks }}</strong>
+                </span>
+
+                <span>
+                  Completed:
+                  <strong>{{ project.completedTasks }}</strong>
+                </span>
+
+                <span
+                  class="project-overdue"
+                  [class.has-overdue]="
+                    project.overdueTasks > 0
+                  ">
+                  Overdue:
+                  <strong>{{ project.overdueTasks }}</strong>
+                </span>
+
+              </div>
+
+              <button
+                type="button"
+                class="open-project-button"
+                (click)="openProject(project.projectId)">
+                Open Project
+              </button>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>

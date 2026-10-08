@@ -20,7 +20,7 @@ public class DashboardService : IDashboardService
         _currentUserService = currentUserService;
     }
 
-    public async Task<DashboardStatsDto> GetStatsAsync()
+   public async Task<DashboardStatsDto> GetStatsAsync()
     {
         var currentUserId = _currentUserService.UserId;
 
@@ -36,6 +36,7 @@ public class DashboardService : IDashboardService
 
         var projectStats = new List<ProjectStatsDto>();
 
+        // Overall dashboard totals
         var totalTasks = 0;
         var todoTasks = 0;
         var inProgressTasks = 0;
@@ -45,38 +46,61 @@ public class DashboardService : IDashboardService
 
         foreach (var project in projects)
         {
-            var totalTasks = tasks.Count;
+            var tasks =
+                await _taskRepository.GetByProjectIdAsync(
+                    project.Id);
 
-            var completedTasks = tasks.Count(
+            var projectTotalTasks = tasks.Count;
+
+            var projectTodoTasks = tasks.Count(
+                x => x.Status == TaskItemStatus.Todo);
+
+            var projectInProgressTasks = tasks.Count(
+                x => x.Status == TaskItemStatus.InProgress);
+
+            var projectCompletedTasks = tasks.Count(
                 x => x.Status == TaskItemStatus.Completed);
 
-            var completionPercentage = totalTasks == 0
+            var projectCancelledTasks = tasks.Count(
+                x => x.Status == TaskItemStatus.Cancelled);
+
+            var projectOverdueTasks = tasks.Count(IsOverdue);
+
+            var completionPercentage = projectTotalTasks == 0
                 ? 0
                 : (int)Math.Round(
-                    completedTasks * 100.0 / totalTasks);
+                    projectCompletedTasks * 100.0 /
+                    projectTotalTasks);
 
             var stats = new ProjectStatsDto
             {
                 ProjectId = project.Id,
                 ProjectName = project.Name,
 
-                TotalTasks = totalTasks,
+                TotalTasks = projectTotalTasks,
 
-                TodoTasks = tasks.Count(
-                    x => x.Status == TaskItemStatus.Todo),
+                TodoTasks = projectTodoTasks,
 
-                InProgressTasks = tasks.Count(
-                    x => x.Status == TaskItemStatus.InProgress),
+                InProgressTasks = projectInProgressTasks,
 
-                CompletedTasks = completedTasks,
+                CompletedTasks = projectCompletedTasks,
 
-                CancelledTasks = tasks.Count(
-                    x => x.Status == TaskItemStatus.Cancelled),
+                CancelledTasks = projectCancelledTasks,
 
-                OverdueTasks = projectOverdue,
+                OverdueTasks = projectOverdueTasks,
 
                 CompletionPercentage = completionPercentage
             };
+
+            projectStats.Add(stats);
+
+            // Add this project's numbers to the overall totals
+            totalTasks += projectTotalTasks;
+            todoTasks += projectTodoTasks;
+            inProgressTasks += projectInProgressTasks;
+            completedTasks += projectCompletedTasks;
+            cancelledTasks += projectCancelledTasks;
+            overdueTasks += projectOverdueTasks;
         }
 
         return new DashboardStatsDto
