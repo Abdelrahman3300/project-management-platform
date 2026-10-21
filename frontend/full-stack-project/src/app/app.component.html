@@ -16,14 +16,14 @@
     >
       Logout
     </button>
-    
+
   </div>
 }
 
 @if (!isProjectDetailsPage()&& isLoggedIn()) {
 <div class="container">
 
-  
+
   <h1>My Projects</h1>
 
   <!-- CREATE PROJECT -->
@@ -77,7 +77,7 @@
     </form>
 
   </div>
-  
+
 
   <!-- ERROR -->
 
@@ -210,11 +210,11 @@
             </button>
 
           </div>
-          
+
         }
-        
+
       </div>
-      
+
 
     }
 
@@ -222,4 +222,6 @@
 
 </div>
 }
-<router-outlet></router-outlet>
+<router-outlet>
+  <app-notifications />
+</router-outlet>

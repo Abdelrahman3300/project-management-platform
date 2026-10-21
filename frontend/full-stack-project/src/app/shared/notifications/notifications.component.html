@@ -1,0 +1,34 @@
+<div
+  class="notification-container"
+  aria-live="polite"
+  aria-relevant="additions removals">
+
+  @for (
+    notification of notificationService.notifications();
+    track notification.id
+  ) {
+    <div
+      class="notification"
+      [class.notification-success]="notification.type === 'success'"
+      [class.notification-error]="notification.type === 'error'"
+      [class.notification-warning]="notification.type === 'warning'"
+      [class.notification-info]="notification.type === 'info'"
+      role="status">
+
+      <div class="notification-content">
+        <strong>{{ notification.title }}</strong>
+        <p>{{ notification.message }}</p>
+      </div>
+
+      <button
+        type="button"
+        class="notification-close"
+        aria-label="Dismiss notification"
+        (click)="notificationService.dismiss(notification.id)">
+        &times;
+      </button>
+
+    </div>
+  }
+
+</div>

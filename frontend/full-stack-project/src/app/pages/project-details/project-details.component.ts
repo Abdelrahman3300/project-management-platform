@@ -19,6 +19,7 @@ import { CommentService } from '../../services/comment.service';
 
 import { AuthService } from '../../services/auth.service';
 
+import { NotificationService } from '../../services/notification.service';
 @Component({
   selector: 'app-project-details',
   standalone: true,
@@ -39,6 +40,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   private readonly commentService = inject(CommentService);
 
+  private readonly notificationService = inject(NotificationService);
 
   members: ProjectMember[] = [];
 
@@ -127,28 +129,28 @@ export class ProjectDetailsComponent implements OnInit {
   get filteredTasks(): TaskItem[] {
     const searchTerm =
       this.taskSearchTerm.trim().toLowerCase();
-  
+
     return this.tasks.filter(task => {
-  
+
       const matchesSearch =
         !searchTerm ||
         task.title.toLowerCase().includes(searchTerm) ||
         (task.description ?? '')
           .toLowerCase()
           .includes(searchTerm);
-  
+
       const matchesStatus =
         !this.taskStatusFilter ||
         task.status === this.taskStatusFilter;
-  
+
       const matchesPriority =
         !this.taskPriorityFilter ||
         task.priority === this.taskPriorityFilter;
-  
+
       const matchesAssignee =
         !this.taskAssigneeFilter ||
         task.assignedToUserId === this.taskAssigneeFilter;
-  
+
       return (
         matchesSearch &&
         matchesStatus &&
@@ -174,6 +176,31 @@ export class ProjectDetailsComponent implements OnInit {
     this.taskAssigneeFilter = '';
   }
 
+  get projectTaskCount(): number {
+    return this.tasks.length;
+  }
+
+  get completedTaskCount(): number {
+    return this.tasks.filter(
+      task => task.status === 'Completed'
+    ).length;
+  }
+
+  get projectCompletionPercentage(): number {
+    if (this.tasks.length === 0) {
+      return 0;
+    }
+
+    return Math.round(
+      (this.completedTaskCount / this.tasks.length) * 100
+    );
+  }
+
+  get overdueTaskCount(): number {
+    return this.tasks.filter(
+      task => this.isTaskOverdue(task)
+    ).length;
+  }
   private loadProject(id: string): void {
 
     this.projectService.getById(id).subscribe({
@@ -227,6 +254,7 @@ export class ProjectDetailsComponent implements OnInit {
             this.members.filter(
               member => member.userId !== userId
             );
+            this.notificationService.success('Project member Removed successfully.');
         },
 
         error: (error) => {
@@ -276,6 +304,7 @@ export class ProjectDetailsComponent implements OnInit {
           this.newMemberRole = 'Member';
           this.showAddMemberForm = false;
           this.memberSubmitting = false;
+          this.notificationService.success('Project member added successfully.');
         },
 
         error: (error) => {
@@ -290,6 +319,7 @@ export class ProjectDetailsComponent implements OnInit {
           } else {
             this.memberError =
               'Failed to add project member.';
+
           }
 
           this.memberSubmitting = false;
@@ -351,6 +381,7 @@ export class ProjectDetailsComponent implements OnInit {
         this.newTaskAssignedToUserId = '';
 
         this.addingTask = false;
+        this.notificationService.success('Task created successfully.');
       },
       error: (error) => {
         console.error('Create task error:', error);
@@ -364,6 +395,7 @@ export class ProjectDetailsComponent implements OnInit {
           'Failed to create task.';
 
         this.addingTask = false;
+        this.notificationService.error('Failed to create task. Please try again.');
       }
     });
   }
@@ -412,6 +444,7 @@ export class ProjectDetailsComponent implements OnInit {
         priority: this.editTaskPriority,
         dueDate: this.editTaskDueDate || null,
         assignedToUserId: this.editTaskAssignedToUserId || null
+
       }
     ).subscribe({
       next: (updatedTask) => {
@@ -423,11 +456,13 @@ export class ProjectDetailsComponent implements OnInit {
 
         this.editingTaskId = null;
         this.updatingTask = false;
+        this.notificationService.success('Task updated successfully.');
       },
       error: (error) => {
         console.error(error);
         this.taskActionError = 'Failed to update task.';
         this.updatingTask = false;
+        this.notificationService.error('Failed to update task.');
       }
     });
   }
@@ -462,18 +497,21 @@ export class ProjectDetailsComponent implements OnInit {
           delete this.commentSubmitting[taskId];
           delete this.commentError[taskId];
           this.deletingTaskId = null;
+          this.notificationService.success('Task deleted successfully.');
         },
         error: (error) => {
           console.error(error);
            if (error.status === 403) {
               this.taskActionError =
                 'You do not have permission to delete this task.';
+
             } else {
               this.taskActionError =
                 'Failed to delete task.';
             }
 
           this.deletingTaskId = null;
+          this.notificationService.error('Failed to delete task.');
         }
       });
   }
@@ -573,6 +611,7 @@ export class ProjectDetailsComponent implements OnInit {
 
         this.commentTextByTask[taskId] = '';
         this.commentSubmitting[taskId] = false;
+        this.notificationService.success('Comment added successfully.');
       },
       error: () => {
         this.commentError[taskId] =
@@ -591,6 +630,7 @@ export class ProjectDetailsComponent implements OnInit {
         this.commentsByTask[taskId] =
           (this.commentsByTask[taskId] ?? [])
             .filter(comment => comment.id !== commentId);
+            this.notificationService.success('Comment deleted successfully.');
       },
       error: () => {
         this.commentError[taskId] =
@@ -598,8 +638,6 @@ export class ProjectDetailsComponent implements OnInit {
       }
     });
   }
-
-
 
   goBack(): void {
     this.router.navigate(['/']);

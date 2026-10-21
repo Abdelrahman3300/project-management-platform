@@ -7,6 +7,8 @@ import { Router, RouterOutlet } from '@angular/router';
 
 import { AuthService } from './services/auth.service';
 
+import { NotificationsComponent } from './shared/notifications/notifications.component';
+
 import {
   CreateProjectRequest,
   ProjectService,
@@ -16,7 +18,7 @@ import {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, RouterOutlet],
+  imports: [CommonModule, FormsModule, DatePipe, RouterOutlet, NotificationsComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -42,14 +44,14 @@ export class AppComponent implements OnInit {
   isProjectDetailsPage(): boolean {
     return this.router.url.startsWith('/projects/');
   }
-  
+
   projects: Project[] = [];
 
   loading = true;
   creating = false;
   editing = false;
   updating = false;
-  
+
   error = '';
 
   newProject: CreateProjectRequest = {
@@ -224,5 +226,5 @@ export class AppComponent implements OnInit {
   viewProject(id: string): void {
     this.router.navigate(['/projects', id]);
   }
-  
+
 }
