@@ -582,3 +582,14 @@ button:disabled {
 .clear-filters-button:hover {
   background:#f9fafb;
 }
+
+.field-error {
+  margin: 5px 0 0;
+  color: #b42318;
+  font-size: 12px;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: #d92d20;
+}

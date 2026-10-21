@@ -633,15 +633,26 @@
 
           <div class="form-field">
 
-            <label for="task-title">
+            <label for="task-title"
+            required
+            [attr.aria-invalid]="!!newTaskTitleError"
+            (blur)="
+              newTaskTitleError =
+                newTaskTitle.trim() ? '' : 'Task title is required.'
+            ">
               Title
             </label>
+
+            @if (newTaskTitleError) {
+              <p class="field-error">{{ newTaskTitleError }}</p>
+            }
 
             <input
               id="task-title"
               type="text"
               [(ngModel)]="newTaskTitle"
-              placeholder="Task title">
+              placeholder="Task title"
+              (ngModelChange)="onNewTaskTitleChange()">
 
           </div>
 

@@ -96,6 +96,9 @@ export class ProjectDetailsComponent implements OnInit {
   addTaskError = '';
   error = '';
   membersError = '';
+  addTaskSubmitted = false;
+  newTaskTitleError = '';
+  newTaskDueDateError = '';
 
   editingTaskId: string | null = null;
 
@@ -279,6 +282,14 @@ export class ProjectDetailsComponent implements OnInit {
     const userId = this.newMemberUserId.trim();
 
     if (!userId) {
+     this.memberError = 'User ID is required.';
+      return;
+    }
+    const guidPattern =/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+    if (!guidPattern.test(userId)) {
+      this.memberError =
+        'Enter a valid user ID in GUID format.';
       return;
     }
 
@@ -353,6 +364,12 @@ export class ProjectDetailsComponent implements OnInit {
 
   addTask(): void {
     if (!this.project || !this.newTaskTitle.trim()) {
+      return;
+    }
+
+    this.addTaskSubmitted = true;
+
+    if (!this.validateNewTaskForm()) {
       return;
     }
 
@@ -637,6 +654,36 @@ export class ProjectDetailsComponent implements OnInit {
           'Failed to delete comment.';
       }
     });
+  }
+
+  private validateNewTaskForm(): boolean {
+    this.newTaskTitleError = '';
+    this.newTaskDueDateError = '';
+
+    if (!this.newTaskTitle.trim()) {
+      this.newTaskTitleError = 'Task title is required.';
+    }
+
+    if (this.newTaskDueDate) {
+      const dueDate = new Date(this.newTaskDueDate);
+
+      if (Number.isNaN(dueDate.getTime())) {
+        this.newTaskDueDateError = 'Enter a valid due date.';
+      }
+    }
+
+    return !this.newTaskTitleError &&
+      !this.newTaskDueDateError;
+  }
+
+  onNewTaskTitleChange(): void {
+  if (this.newTaskTitle.trim()) {
+    this.newTaskTitleError = '';
+    }
+  }
+
+  onNewTaskDueDateChange(): void {
+    this.newTaskDueDateError = '';
   }
 
   goBack(): void {
