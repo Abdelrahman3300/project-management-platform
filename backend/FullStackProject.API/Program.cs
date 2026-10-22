@@ -8,8 +8,10 @@ using System.Text;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
+using FullStackProject.API.ExceptionHandling;
 using FullStackProject.API.Services;
+using Microsoft.AspNetCore.Mvc;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -90,7 +92,35 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(entry => entry.Value?.Errors.Count > 0)
+            .ToDictionary(
+                entry => entry.Key,
+                entry => entry.Value!.Errors
+                    .Select(error =>
+                        string.IsNullOrWhiteSpace(error.ErrorMessage)
+                            ? "The submitted value is invalid."
+                            : error.ErrorMessage)
+                    .ToArray());
+
+        var response = new ValidationProblemDetails(errors)
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = "One or more validation errors occurred.",
+            Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1"
+        };
+
+        return new BadRequestObjectResult(response);
+    };
+});
+
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionHandler>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -107,6 +137,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/api/test-error", () =>
+{
+    throw new InvalidOperationException(
+        "Temporary exception-handling test.");
+});
 
 app.Run();
 
