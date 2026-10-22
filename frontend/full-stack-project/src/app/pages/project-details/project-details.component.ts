@@ -687,6 +687,6 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/dashboard']);
   }
 }

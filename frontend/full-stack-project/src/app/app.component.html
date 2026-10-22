@@ -1,4 +1,4 @@
-@if (isLoggedIn()) {
+@if (authService.isLoggedIn()) {
   <div class="auth-bar">
     <span>
       Welcome, {{ authService.getCurrentUser()?.firstName }}
@@ -20,6 +20,12 @@
   </div>
 }
 
+
+<main class="app-main">
+  <router-outlet />
+</main>
+
+<app-notifications />
 @if (!isProjectDetailsPage()&& isLoggedIn()) {
 <div class="container">
 
@@ -222,6 +228,3 @@
 
 </div>
 }
-<router-outlet>
-  <app-notifications />
-</router-outlet>
