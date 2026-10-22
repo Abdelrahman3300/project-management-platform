@@ -138,11 +138,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/api/test-error", () =>
-{
-    throw new InvalidOperationException(
-        "Temporary exception-handling test.");
-});
-
 app.Run();
 
