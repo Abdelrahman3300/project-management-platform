@@ -120,6 +120,12 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 var app = builder.Build();
 
+app.MapGet("/", () => Results.Ok(new
+{
+    status = "OK",
+    message = "FullStackProject API is running"
+}));
+
 app.UseMiddleware<GlobalExceptionHandler>();
 
 // Configure the HTTP request pipeline.
@@ -139,4 +145,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
