@@ -1,16 +1,28 @@
-```gitignore
 # .NET
-bin/
-obj/
+[Bb]in/
+[Oo]bj/
 .vs/
+*.user
+*.suo
+*.cache
 
 # Angular
 node_modules/
 dist/
+.angular/
 
-# Environment / secrets
+# Environment variables and secrets
 .env
 .env.*
+!.env.example
+secrets.json
+appsettings.*.local.json
+
+# Certificates and private keys
+*.pfx
+*.p12
+*.key
+*.pem
 
 # IDE
 .idea/
@@ -19,6 +31,15 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
-```
+Desktop.ini
 
-.fake
+# Logs
+*.log
+
+# Test results and coverage
+TestResults/
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
