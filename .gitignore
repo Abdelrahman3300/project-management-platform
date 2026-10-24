@@ -6,6 +6,9 @@
 *.suo
 *.cache
 
+# Test results
+[Tt]est[Rr]esults/
+
 # Angular
 node_modules/
 dist/
