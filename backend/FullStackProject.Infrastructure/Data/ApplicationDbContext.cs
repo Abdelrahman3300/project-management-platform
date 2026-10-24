@@ -28,5 +28,17 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(ApplicationDbContext).Assembly);
+
+        modelBuilder.Entity<Project>()
+            .HasIndex(p => p.OwnerId);
+
+        modelBuilder.Entity<TaskItem>()
+            .HasIndex(t => t.ProjectId);
+
+        modelBuilder.Entity<TaskItem>()
+            .HasIndex(t => t.AssignedToUserId);
+
+        modelBuilder.Entity<Comment>()
+            .HasIndex(c => c.TaskItemId);
     }
 }
