@@ -1,6 +1,7 @@
+
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
@@ -24,12 +25,25 @@ export class LoginComponent {
 
   loading = false;
   error = '';
+  submitted = false;
 
-  login(): void {
+  login(form: NgForm): void {
+    if (this.loading) {
+      return;
+    }
+
+    this.submitted = true;
     this.error = '';
 
-    if (!this.email || !this.password) {
-      this.error = 'Please enter your email and password.';
+    this.email = this.email.trim();
+
+    if (
+      form.invalid ||
+      !this.email ||
+      !this.password
+    ) {
+      this.error = 'Please correct the highlighted fields.';
+      form.control.markAllAsTouched();
       return;
     }
 
@@ -43,7 +57,6 @@ export class LoginComponent {
         this.loading = false;
         this.router.navigate(['/dashboard']);
       },
-
       error: error => {
         this.loading = false;
 

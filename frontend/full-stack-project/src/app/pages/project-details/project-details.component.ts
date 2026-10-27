@@ -686,6 +686,37 @@ export class ProjectDetailsComponent implements OnInit {
     this.newTaskDueDateError = '';
   }
 
+  retryLoadProject(): void {
+    if (!this.project && !this.loading) {
+      const id = this.route.snapshot.paramMap.get('id');
+
+      if (!id) {
+        this.error = 'Project ID was not provided.';
+        return;
+      }
+
+      this.loading = true;
+      this.error = '';
+      this.loadProject(id);
+    }
+  }
+
+  retryLoadMembers(): void {
+    if (!this.project || this.memberLoading) {
+      return;
+    }
+
+    this.loadMembers(this.project.id);
+  }
+
+  retryLoadTasks(): void {
+    if (!this.project || this.tasksLoading) {
+      return;
+    }
+
+    this.loadTasks(this.project.id);
+  }
+
   goBack(): void {
     this.router.navigate(['/dashboard']);
   }

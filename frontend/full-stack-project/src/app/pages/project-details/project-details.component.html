@@ -19,9 +19,16 @@
 
   <!-- Project error -->
 
-  @if (error) {
-    <div class="error">
-      {{ error }}
+  @if (error && !loading) {
+    <div class="error" role="alert">
+      <p>{{ error }}</p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="retryLoadProject()">
+        Retry
+      </button>
     </div>
   }
 
@@ -250,7 +257,16 @@
     }
 
     @if (memberError && !showAddMemberForm) {
-      <p class="member-error">{{ memberError }}</p>
+      <div class="member-error" role="alert">
+        <p>{{ memberError }}</p>
+
+        <button
+          type="button"
+          class="retry-button"
+          (click)="retryLoadMembers()">
+          Retry Loading Members
+        </button>
+      </div>
     }
 
     @if (!memberLoading && members.length > 0) {
@@ -290,25 +306,6 @@
     }
   </section>
     <!-- ========================================================= -->
-
-    <div class="section-heading">
-
-      <div>
-
-        <h2>
-          Members
-        </h2>
-
-        <p>
-          {{ members.length }}
-          {{ members.length === 1 ? 'member' : 'members' }}
-          in this project
-        </p>
-
-      </div>
-
-    </div>
-
 
     <!-- ========================================================= -->
     <!-- TASKS                                                      -->
@@ -629,32 +626,29 @@
         <div class="task-form-grid">
 
 
-          <!-- Title -->
+                   <!-- Title -->
+                   <div class="form-field">
+                    <label for="task-title">Title</label>
 
-          <div class="form-field">
+                    <input
+                      id="task-title"
+                      name="newTaskTitle"
+                      type="text"
+                      [(ngModel)]="newTaskTitle"
+                      placeholder="Task title"
+                      required
+                      maxlength="200"
+                      [attr.aria-invalid]="!!newTaskTitleError"
+                      [attr.aria-describedby]="newTaskTitleError ? 'task-title-error' : null"
+                      (blur)="newTaskTitleError = newTaskTitle.trim() ? '' : 'Task title is required.'"
+                      (ngModelChange)="onNewTaskTitleChange()">
 
-            <label for="task-title"
-            required
-            [attr.aria-invalid]="!!newTaskTitleError"
-            (blur)="
-              newTaskTitleError =
-                newTaskTitle.trim() ? '' : 'Task title is required.'
-            ">
-              Title
-            </label>
-
-            @if (newTaskTitleError) {
-              <p class="field-error">{{ newTaskTitleError }}</p>
-            }
-
-            <input
-              id="task-title"
-              type="text"
-              [(ngModel)]="newTaskTitle"
-              placeholder="Task title"
-              (ngModelChange)="onNewTaskTitleChange()">
-
-          </div>
+                    @if (newTaskTitleError) {
+                      <p id="task-title-error" class="field-error" role="alert">
+                        {{ newTaskTitleError }}
+                      </p>
+                    }
+                  </div>
 
 
           <!-- Description -->
@@ -737,20 +731,25 @@
           </div>
 
 
-          <!-- Due Date -->
+                   <!-- Due Date -->
+                   <div class="form-field">
+                    <label for="task-due-date">Due Date</label>
 
-          <div class="form-field">
+                    <input
+                      id="task-due-date"
+                      name="newTaskDueDate"
+                      type="date"
+                      [(ngModel)]="newTaskDueDate"
+                      [attr.aria-invalid]="!!newTaskDueDateError"
+                      [attr.aria-describedby]="newTaskDueDateError ? 'task-due-date-error' : null"
+                      (ngModelChange)="onNewTaskDueDateChange()">
 
-            <label for="task-due-date">
-              Due Date
-            </label>
-
-            <input
-              id="task-due-date"
-              type="date"
-              [(ngModel)]="newTaskDueDate">
-
-          </div>
+                    @if (newTaskDueDateError) {
+                      <p id="task-due-date-error" class="field-error" role="alert">
+                        {{ newTaskDueDateError }}
+                      </p>
+                    }
+                  </div>
 
 
           <!-- Assignee -->
@@ -1263,6 +1262,7 @@
                 <div class="comment-form">
 
                   <textarea
+                    name="comment-descriptionss"
                     [value]="
                       commentTextByTask[task.id] || ''
                     "
@@ -1324,12 +1324,17 @@
       <!-- TASK ERRORS                                              -->
       <!-- ======================================================= -->
 
-      @if (tasksError) {
+      @if (tasksError && !tasksLoading) {
+        <div class="task-error" role="alert">
+          <p>{{ tasksError }}</p>
 
-        <p class="task-error">
-          {{ tasksError }}
-        </p>
-
+          <button
+            type="button"
+            class="retry-button"
+            (click)="retryLoadTasks()">
+            Retry Loading Tasks
+          </button>
+        </div>
       }
 
 

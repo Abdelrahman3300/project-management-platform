@@ -1,100 +1,177 @@
+
 <div class="auth-page">
-    <div class="auth-card">
-  
-      <h1>Create Account</h1>
-  
-      <p class="auth-subtitle">
-        Create your FullStackProject account
-      </p>
-  
-      @if (error) {
-        <div class="error-message">
-          {{ error }}
-        </div>
-      }
-  
-      <form (ngSubmit)="register()">
-  
-        <div class="form-group">
-          <label for="firstName">
-            First Name
-          </label>
-  
-          <input
-            id="firstName"
-            type="text"
-            name="firstName"
-            [(ngModel)]="firstName"
-            placeholder="Enter your first name"
-            autocomplete="given-name"
-          />
-        </div>
-  
-        <div class="form-group">
-          <label for="lastName">
-            Last Name
-          </label>
-  
-          <input
-            id="lastName"
-            type="text"
-            name="lastName"
-            [(ngModel)]="lastName"
-            placeholder="Enter your last name"
-            autocomplete="family-name"
-          />
-        </div>
-  
-        <div class="form-group">
-          <label for="email">
-            Email
-          </label>
-  
-          <input
-            id="email"
-            type="email"
-            name="email"
-            [(ngModel)]="email"
-            placeholder="Enter your email"
-            autocomplete="email"
-          />
-        </div>
-  
-        <div class="form-group">
-          <label for="password">
-            Password
-          </label>
-  
-          <input
-            id="password"
-            type="password"
-            name="password"
-            [(ngModel)]="password"
-            placeholder="Minimum 6 characters"
-            autocomplete="new-password"
-          />
-        </div>
-  
-        <button
-          type="submit"
-          [disabled]="loading"
-        >
-          {{ loading ? 'Creating account...' : 'Register' }}
-        </button>
-  
-      </form>
-  
-      <div class="auth-footer">
-        <span>Already have an account?</span>
-  
-        <button
-          type="button"
-          class="link-button"
-          (click)="goToLogin()"
-        >
-          Login
-        </button>
+  <div class="auth-card">
+    <h1>Create Account</h1>
+
+    <p class="auth-subtitle">
+      Create your FullStackProject account
+    </p>
+
+    @if (error) {
+      <div class="error-message" role="alert">
+        {{ error }}
       </div>
-  
+    }
+
+    <form
+      #registerForm="ngForm"
+      (ngSubmit)="register(registerForm)"
+      novalidate
+    >
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+
+        <input
+          id="firstName"
+          type="text"
+          name="firstName"
+          [(ngModel)]="firstName"
+          #firstNameInput="ngModel"
+          placeholder="Enter your first name"
+          autocomplete="given-name"
+          required
+          maxlength="100"
+          [disabled]="loading"
+          [attr.aria-invalid]="
+            firstNameInput.invalid &&
+            (firstNameInput.touched || submitted)
+          "
+          aria-describedby="firstNameError"
+        />
+
+        @if (
+          firstNameInput.invalid &&
+          (firstNameInput.touched || submitted)
+        ) {
+          <small id="firstNameError" class="field-error">
+            First name is required.
+          </small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+
+        <input
+          id="lastName"
+          type="text"
+          name="lastName"
+          [(ngModel)]="lastName"
+          #lastNameInput="ngModel"
+          placeholder="Enter your last name"
+          autocomplete="family-name"
+          required
+          maxlength="100"
+          [disabled]="loading"
+          [attr.aria-invalid]="
+            lastNameInput.invalid &&
+            (lastNameInput.touched || submitted)
+          "
+          aria-describedby="lastNameError"
+        />
+
+        @if (
+          lastNameInput.invalid &&
+          (lastNameInput.touched || submitted)
+        ) {
+          <small id="lastNameError" class="field-error">
+            Last name is required.
+          </small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          #emailInput="ngModel"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+          email
+          maxlength="254"
+          [disabled]="loading"
+          [attr.aria-invalid]="
+            emailInput.invalid &&
+            (emailInput.touched || submitted)
+          "
+          aria-describedby="emailError"
+        />
+
+        @if (
+          emailInput.invalid &&
+          (emailInput.touched || submitted)
+        ) {
+          <small id="emailError" class="field-error">
+            @if (emailInput.errors?.['required']) {
+              Email is required.
+            } @else if (emailInput.errors?.['email']) {
+              Enter a valid email address.
+            } @else if (emailInput.errors?.['maxlength']) {
+              Email must not exceed 254 characters.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          #passwordInput="ngModel"
+          placeholder="Minimum 6 characters"
+          autocomplete="new-password"
+          required
+          minlength="6"
+          [disabled]="loading"
+          [attr.aria-invalid]="
+            passwordInput.invalid &&
+            (passwordInput.touched || submitted)
+          "
+          aria-describedby="passwordError"
+        />
+
+        @if (
+          passwordInput.invalid &&
+          (passwordInput.touched || submitted)
+        ) {
+          <small id="passwordError" class="field-error">
+            @if (passwordInput.errors?.['required']) {
+              Password is required.
+            } @else if (passwordInput.errors?.['minlength']) {
+              Password must be at least 6 characters.
+            }
+          </small>
+        }
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loading"
+      >
+        {{ loading ? 'Creating account...' : 'Register' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Already have an account?</span>
+
+      <button
+        type="button"
+        class="link-button"
+        (click)="goToLogin()"
+        [disabled]="loading"
+      >
+        Login
+      </button>
     </div>
   </div>
+</div>

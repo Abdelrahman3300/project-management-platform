@@ -1,4 +1,6 @@
 # .NET
+**/bin/
+**/obj/
 [Bb]in/
 [Oo]bj/
 .vs/
@@ -11,8 +13,8 @@
 
 # Angular
 node_modules/
-dist/
-.angular/
+**/dist/
+**/.angular/
 
 # Environment variables and secrets
 .env
@@ -30,6 +32,8 @@ appsettings.*.local.json
 # IDE
 .idea/
 .vscode/
+*.user
+*.suo
 
 # OS
 .DS_Store

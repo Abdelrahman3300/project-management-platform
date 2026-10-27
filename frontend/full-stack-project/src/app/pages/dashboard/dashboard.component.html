@@ -7,17 +7,26 @@
     </div>
   </div>
 
-  @if (loading) {
-    <div class="dashboard-state">
-      Loading dashboard...
-    </div>
-  }
 
-  @if (error) {
-    <div class="dashboard-error">
-      {{ error }}
-    </div>
-  }
+@if (loading) {
+  <div class="dashboard-state" role="status" aria-live="polite">
+    Loading dashboard statistics...
+  </div>
+}
+
+@if (error && !loading) {
+  <div class="dashboard-error" role="alert">
+    <p>{{ error }}</p>
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="loadDashboard()">
+      Retry
+    </button>
+  </div>
+}
+
 
   @if (!loading && !error && stats) {
 

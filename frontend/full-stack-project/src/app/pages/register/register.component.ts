@@ -1,6 +1,7 @@
+
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
@@ -26,23 +27,30 @@ export class RegisterComponent {
 
   loading = false;
   error = '';
+  submitted = false;
 
-  register(): void {
+  register(form: NgForm): void {
+    if (this.loading) {
+      return;
+    }
+
+    this.submitted = true;
     this.error = '';
 
+    // Normalize user input before validation and submission.
+    this.firstName = this.firstName.trim();
+    this.lastName = this.lastName.trim();
+    this.email = this.email.trim();
+
     if (
+      form.invalid ||
       !this.firstName ||
       !this.lastName ||
       !this.email ||
       !this.password
     ) {
-      this.error = 'Please fill in all fields.';
-      return;
-    }
-
-    if (this.password.length < 6) {
-      this.error =
-        'Password must be at least 6 characters.';
+      this.error = 'Please correct the highlighted fields.';
+      form.control.markAllAsTouched();
       return;
     }
 
@@ -58,13 +66,11 @@ export class RegisterComponent {
         this.loading = false;
         this.router.navigate(['/']);
       },
-
       error: error => {
         this.loading = false;
 
         if (error.status === 409) {
-          this.error =
-            'A user with this email already exists.';
+          this.error = 'A user with this email already exists.';
         } else {
           this.error =
             'Unable to create account. Please try again.';
