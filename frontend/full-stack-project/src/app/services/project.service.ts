@@ -22,7 +22,7 @@ export class ProjectService {
 
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://localhost:5090/api/projects';
+  private readonly apiUrl = '/api/projects';
 
   getAll(): Observable<Project[]> {
     return this.http.get<Project[]>(this.apiUrl);

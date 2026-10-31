@@ -10,7 +10,7 @@ import { TaskItem } from '../models/task-item';
 export class TaskItemService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://localhost:5090/api/projects';
+  private readonly apiUrl = '/api/projects';
 
   getByProjectId(projectId: string): Observable<TaskItem[]> {
     return this.http.get<TaskItem[]>(

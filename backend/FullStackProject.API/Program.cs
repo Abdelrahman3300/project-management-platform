@@ -136,7 +136,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AngularPolicy");
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsEnvironment("Docker"))
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 

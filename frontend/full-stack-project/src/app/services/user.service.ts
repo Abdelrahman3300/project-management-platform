@@ -16,7 +16,7 @@ export class UserService {
 
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://localhost:5090/api/users';
+  private readonly apiUrl = '/api/users';
 
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);

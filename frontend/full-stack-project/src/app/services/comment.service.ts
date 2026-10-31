@@ -10,7 +10,7 @@ export class CommentService {
   private readonly http = inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:5090/api';
+    '/api';
 
   getByTaskId(taskId: string): Observable<Comment[]> {
     return this.http.get<Comment[]>(

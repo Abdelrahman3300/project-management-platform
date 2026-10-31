@@ -13,7 +13,7 @@ export class ProjectMemberService {
   private readonly http = inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:5090/api/projects';
+    '/api/projects';
 
   getMembers(projectId: string): Observable<ProjectMember[]> {
     return this.http.get<ProjectMember[]>(

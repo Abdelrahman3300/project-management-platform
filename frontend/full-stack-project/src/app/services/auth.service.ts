@@ -14,7 +14,7 @@ import {
 export class AuthService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://localhost:5090/api/auth';
+  private readonly apiUrl = '/api/auth';
   private readonly tokenKey = 'auth_token';
   private readonly userKey = 'auth_user';
 

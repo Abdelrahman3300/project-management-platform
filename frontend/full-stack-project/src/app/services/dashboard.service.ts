@@ -10,7 +10,7 @@ export class DashboardService {
   private readonly http = inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:5090/api/dashboard';
+    '/api/dashboard';
 
   getStats(): Observable<DashboardStats> {
     return this.http.get<DashboardStats>(
