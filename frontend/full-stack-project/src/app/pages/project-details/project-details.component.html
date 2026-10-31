@@ -2,356 +2,303 @@
 
   <!-- Back navigation -->
 
-  <button
-    type="button"
-    class="back-button"
-    (click)="goBack()">
-    ← Back to Projects
+  <button type="button" class="back-button" (click)="goBack()">
+      ← Back to Projects
   </button>
 
 
   <!-- Loading -->
 
   @if (loading) {
-    <p>Loading project...</p>
+  <p>Loading project...</p>
   }
 
 
   <!-- Project error -->
 
   @if (error && !loading) {
-    <div class="error" role="alert">
+  <div class="error" role="alert">
       <p>{{ error }}</p>
 
-      <button
-        type="button"
-        class="retry-button"
-        (click)="retryLoadProject()">
-        Retry
+      <button type="button" class="retry-button" (click)="retryLoadProject()">
+          Retry
       </button>
-    </div>
-  }
+  </div>
+  } @if (!loading && project) {
 
+  <!-- ========================================================= -->
+  <!-- PROJECT HEADER                                             -->
+  <!-- ========================================================= -->
 
-  @if (!loading && project) {
-
-    <!-- ========================================================= -->
-    <!-- PROJECT HEADER                                             -->
-    <!-- ========================================================= -->
-
-    <div class="project-header">
+  <div class="project-header">
 
       <div class="project-header-main">
 
-        <div class="project-title-area">
+          <div class="project-title-area">
 
-          <div>
+              <div>
 
-            <h1>
-              {{ project.name }}
-            </h1>
+                  <h1>
+            {{ project.name }}
+          </h1> @if (project.description) {
+                  <p class="project-description">
+                      {{ project.description }}
+                  </p>
+                  }
 
-            @if (project.description) {
-              <p class="project-description">
-                {{ project.description }}
-              </p>
-            }
+                  <div class="project-owner">
 
-            <div class="project-owner">
+                      <strong>
+              Owner:
+            </strong>
 
-              <strong>
-                Owner:
-              </strong>
-
-              <span>
-                {{ project.ownerName }}
-              </span>
-
-            </div>
-
-          </div>
-
-
-          @if (isProjectOwner()) {
-
-            <span class="owner-badge">
-              Project Owner
+                      <span>
+              {{ project.ownerName }}
             </span>
 
-          }
+                  </div>
 
-        </div>
+              </div>
+
+
+              @if (isProjectOwner()) {
+
+              <span class="owner-badge">
+            Project Owner
+          </span> }
+
+          </div>
 
       </div>
 
-    </div>
+  </div>
 
 
-    <!-- ========================================================= -->
-    <!-- PROJECT SUMMARY                                            -->
-    <!-- ========================================================= -->
+  <!-- ========================================================= -->
+  <!-- PROJECT SUMMARY                                            -->
+  <!-- ========================================================= -->
 
-    <div class="project-summary">
+  <div class="project-summary">
 
       <div class="project-summary-card">
 
-        <span class="summary-label">
-          Tasks
-        </span>
-
-        <strong>
-          {{ projectTaskCount }}
-        </strong>
-
-      </div>
-
-
-      <div class="project-summary-card">
-
-        <span class="summary-label">
-          Completed
-        </span>
-
-        <strong>
-          {{ completedTaskCount }}
-        </strong>
-
-      </div>
-
-
-      <div class="project-summary-card">
-
-        <span class="summary-label">
-          Progress
-        </span>
-
-        <strong>
-          {{ projectCompletionPercentage }}%
-        </strong>
-
-      </div>
-
-
-      <div
-        class="project-summary-card"
-        [class.summary-danger]="overdueTaskCount > 0">
-
-        <span class="summary-label">
-          Overdue
-        </span>
-
-        <strong>
-          {{ overdueTaskCount }}
-        </strong>
-
-      </div>
-
-    </div>
-
-
-    <!-- ========================================================= -->
-    <!-- PROJECT PROGRESS                                           -->
-    <!-- ========================================================= -->
-
-    @if (projectTaskCount > 0) {
-
-      <div class="project-progress">
-
-        <div class="project-progress-header">
+          <span class="summary-label">
+        Tasks
+      </span>
 
           <strong>
-            Project Progress
-          </strong>
+        {{ projectTaskCount }}
+      </strong>
+
+      </div>
+
+
+      <div class="project-summary-card">
+
+          <span class="summary-label">
+        Completed
+      </span>
+
+          <strong>
+        {{ completedTaskCount }}
+      </strong>
+
+      </div>
+
+
+      <div class="project-summary-card">
+
+          <span class="summary-label">
+        Progress
+      </span>
+
+          <strong>
+        {{ projectCompletionPercentage }}%
+      </strong>
+
+      </div>
+
+
+      <div class="project-summary-card" [class.summary-danger]="overdueTaskCount > 0">
+
+          <span class="summary-label">
+        Overdue
+      </span>
+
+          <strong>
+        {{ overdueTaskCount }}
+      </strong>
+
+      </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- PROJECT PROGRESS                                           -->
+  <!-- ========================================================= -->
+
+  @if (projectTaskCount > 0) {
+
+  <div class="project-progress">
+
+      <div class="project-progress-header">
+
+          <strong>
+          Project Progress
+        </strong>
 
           <span>
-            {{ projectCompletionPercentage }}%
-          </span>
-
-        </div>
-
-
-        <div class="project-progress-track">
-
-          <div
-            class="project-progress-fill"
-            [style.width.%]="projectCompletionPercentage">
-          </div>
-
-        </div>
+          {{ projectCompletionPercentage }}%
+        </span>
 
       </div>
 
-    }
+
+      <div class="project-progress-track">
+
+          <div class="project-progress-fill" [style.width.%]="projectCompletionPercentage">
+          </div>
+
+      </div>
+
+  </div>
+
+  }
 
 
-    <!-- ========================================================= -->
-    <!-- PROJECT MEMBERS                                            -->
-      <!-- PROJECT MEMBERS -->
+  <!-- ========================================================= -->
+  <!-- PROJECT MEMBERS                                            -->
+  <!-- PROJECT MEMBERS -->
   <section class="members-section">
-    <div class="section-heading">
-      <div>
-        <h2>Project Members</h2>
-        <p>
-          {{ members.length }}
-          {{ members.length === 1 ? 'member' : 'members' }} in this project
-        </p>
-      </div>
-
-      @if (isProjectOwner()) {
-        <button
-          type="button"
-          class="add-member-button"
-          (click)="showAddMemberForm = !showAddMemberForm">
-          {{ showAddMemberForm ? 'Cancel' : '+ Add Member' }}
-        </button>
-      }
-    </div>
-
-    @if (isProjectOwner() && showAddMemberForm) {
-      <div class="add-member-card">
-        <h3>Add a Member</h3>
-        <p>Enter the ID of an existing user to add them to this project.</p>
-
-        <form
-          class="member-form"
-          (ngSubmit)="addMember()">
-
-          <div class="form-field">
-            <label for="new-member-user-id">User ID</label>
-            <input
-              id="new-member-user-id"
-              name="newMemberUserId"
-              type="text"
-              [(ngModel)]="newMemberUserId"
-              placeholder="Enter the user's ID"
-              required />
-          </div>
-
-          <div class="form-field">
-            <label for="new-member-role">Role</label>
-            <select
-              id="new-member-role"
-              name="newMemberRole"
-              [(ngModel)]="newMemberRole">
-              <option value="Member">Member</option>
-              <option value="Admin">Admin</option>
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            class="add-member-submit"
-            [disabled]="memberSubmitting || !newMemberUserId.trim()">
-            {{ memberSubmitting ? 'Adding...' : 'Add Member' }}
-          </button>
-        </form>
-
-        @if (memberError) {
-          <p class="member-error">{{ memberError }}</p>
-        }
-      </div>
-    }
-
-    @if (memberLoading) {
-      <p class="member-message">Loading project members...</p>
-    }
-
-    @if (memberError && !showAddMemberForm) {
-      <div class="member-error" role="alert">
-        <p>{{ memberError }}</p>
-
-        <button
-          type="button"
-          class="retry-button"
-          (click)="retryLoadMembers()">
-          Retry Loading Members
-        </button>
-      </div>
-    }
-
-    @if (!memberLoading && members.length > 0) {
-      <div class="members-grid">
-        @for (member of members; track member.userId) {
-          <article class="member-card">
-            <div class="member-avatar" aria-hidden="true">
-              {{ member.userName.charAt(0).toUpperCase() }}
-            </div>
-
-            <div class="member-details">
-              <h3>{{ member.userName }}</h3>
-              <span class="member-role">{{ member.role }}</span>
-              <p class="member-joined">
-                Joined {{ member.joinedAt | date:'mediumDate' }}
+      <div class="section-heading">
+          <div>
+              <h2>Project Members</h2>
+              <p>
+                  {{ members.length }} {{ members.length === 1 ? 'member' : 'members' }} in this project
               </p>
-            </div>
+          </div>
 
-            @if (isProjectOwner()) {
-              <button
-                type="button"
-                class="remove-member-button"
-                (click)="removeMember(member.userId)">
-                Remove
+          @if (isProjectOwner()) {
+          <button type="button" class="add-member-button" (click)="showAddMemberForm = !showAddMemberForm">
+              {{ showAddMemberForm ? 'Cancel' : '+ Add Member' }}
+          </button>
+          }
+      </div>
+
+      @if (isProjectOwner() && showAddMemberForm) {
+      <div class="add-member-card">
+          <h3>Add a Member</h3>
+          <p>Enter the ID of an existing user to add them to this project.</p>
+
+          <form class="member-form" (ngSubmit)="addMember()">
+
+              <div class="form-field">
+                  <label for="new-member-user-id">User ID</label>
+                  <input id="new-member-user-id" name="newMemberUserId" type="text" [(ngModel)]="newMemberUserId" placeholder="Enter the user's ID" required />
+              </div>
+
+              <div class="form-field">
+                  <label for="new-member-role">Role</label>
+                  <select id="new-member-role" name="newMemberRole" [(ngModel)]="newMemberRole">
+                      <option value="Member">Member</option>
+                      <option value="Admin">Admin</option>
+                  </select>
+              </div>
+
+              <button type="submit" class="add-member-submit" [disabled]="memberSubmitting || !newMemberUserId.trim()">
+                  {{ memberSubmitting ? 'Adding...' : 'Add Member' }}
               </button>
-            }
+          </form>
+
+          @if (memberError) {
+          <p class="member-error">{{ memberError }}</p>
+          }
+      </div>
+      } @if (memberLoading) {
+      <p class="member-message">Loading project members...</p>
+      } @if (memberError && !showAddMemberForm) {
+      <div class="member-error" role="alert">
+          <p>{{ memberError }}</p>
+
+          <button type="button" class="retry-button" (click)="retryLoadMembers()">
+              Retry Loading Members
+          </button>
+      </div>
+      } @if (!memberLoading && members.length > 0) {
+      <div class="members-grid">
+          @for (member of members; track member.userId) {
+          <article class="member-card">
+              <div class="member-avatar" aria-hidden="true">
+                  {{ member.userName.charAt(0).toUpperCase() }}
+              </div>
+
+              <div class="member-details">
+                  <h3>{{ member.userName }}</h3>
+                  <span class="member-role">{{ member.role }}</span>
+                  <p class="member-joined">
+                      Joined {{ member.joinedAt | date:'mediumDate' }}
+                  </p>
+              </div>
+
+              @if (isProjectOwner()) {
+              <button type="button" class="remove-member-button" (click)="removeMember(member.userId)">
+                  Remove
+              </button>
+              }
           </article>
-        }
+          }
       </div>
-    }
-
-    @if (!memberLoading && members.length === 0 && !memberError) {
+      } @if (!memberLoading && members.length === 0 && !memberError) {
       <div class="members-empty">
-        <h3>No members yet</h3>
-        <p>Add collaborators to help manage this project.</p>
+          <h3>No members yet</h3>
+          <p>Add collaborators to help manage this project.</p>
       </div>
-    }
+      }
   </section>
-    <!-- ========================================================= -->
+  <!-- ========================================================= -->
 
-    <!-- ========================================================= -->
-    <!-- TASKS                                                      -->
-    <!-- ========================================================= -->
+  <!-- ========================================================= -->
+  <!-- TASKS                                                      -->
+  <!-- ========================================================= -->
 
-    <div class="tasks-section">
+  <div class="tasks-section">
 
 
       <!-- Tasks header -->
 
       <div class="tasks-header">
 
-        <div>
+          <div>
 
-          <h2>
-            Tasks
-          </h2>
+              <h2>
+          Tasks
+        </h2>
 
-          <p class="tasks-subtitle">
+              <p class="tasks-subtitle">
 
-            {{ tasks.length }}
+                  {{ tasks.length }} {{ tasks.length === 1 ? 'task' : 'tasks' }} in this project
 
-            {{ tasks.length === 1 ? 'task' : 'tasks' }}
-
-            in this project
-
-          </p>
-
-        </div>
-
-
-        @if (tasks.length > 0) {
-
-          <div class="task-header-progress">
-
-            <strong>
-              {{ projectCompletionPercentage }}%
-            </strong>
-
-            <span>
-              completed
-            </span>
+              </p>
 
           </div>
 
-        }
+
+          @if (tasks.length > 0) {
+
+          <div class="task-header-progress">
+
+              <strong>
+            {{ projectCompletionPercentage }}%
+          </strong>
+
+              <span>
+            completed
+          </span>
+
+          </div>
+
+          }
 
       </div>
 
@@ -362,177 +309,160 @@
 
       <div class="task-filters">
 
-        <div class="task-filter-header">
+          <div class="task-filter-header">
 
-          <div>
+              <div>
 
-            <h3>
-              Find Tasks
-            </h3>
+                  <h3>
+            Find Tasks
+          </h3>
 
-            <p>
-              Search and filter tasks in this project.
-            </p>
+                  <p>
+                      Search and filter tasks in this project.
+                  </p>
 
-          </div>
-
-
-          @if (hasTaskFilters()) {
-
-            <button
-              type="button"
-              class="clear-filters-button"
-              (click)="clearTaskFilters()">
-
-              Clear Filters
-
-            </button>
-
-          }
-
-        </div>
+              </div>
 
 
-        <div class="task-filter-grid">
+              @if (hasTaskFilters()) {
 
+              <button type="button" class="clear-filters-button" (click)="clearTaskFilters()">
 
-          <!-- Search -->
+                  Clear Filters
 
-          <div class="filter-field filter-search">
-
-            <label for="task-search">
-              Search
-            </label>
-
-            <input
-              id="task-search"
-              type="text"
-              [(ngModel)]="taskSearchTerm"
-              placeholder="Search title or description...">
-
-          </div>
-
-
-          <!-- Status -->
-
-          <div class="filter-field">
-
-            <label for="task-status-filter">
-              Status
-            </label>
-
-            <select
-              id="task-status-filter"
-              [(ngModel)]="taskStatusFilter">
-
-              <option value="">
-                All statuses
-              </option>
-
-              <option value="Todo">
-                Todo
-              </option>
-
-              <option value="InProgress">
-                In Progress
-              </option>
-
-              <option value="Completed">
-                Completed
-              </option>
-
-              <option value="Cancelled">
-                Cancelled
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- Priority -->
-
-          <div class="filter-field">
-
-            <label for="task-priority-filter">
-              Priority
-            </label>
-
-            <select
-              id="task-priority-filter"
-              [(ngModel)]="taskPriorityFilter">
-
-              <option value="">
-                All priorities
-              </option>
-
-              <option value="Low">
-                Low
-              </option>
-
-              <option value="Medium">
-                Medium
-              </option>
-
-              <option value="High">
-                High
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- Assignee -->
-
-          <div class="filter-field">
-
-            <label for="task-assignee-filter">
-              Assigned To
-            </label>
-
-            <select
-              id="task-assignee-filter"
-              [(ngModel)]="taskAssigneeFilter">
-
-              <option value="">
-                Everyone
-              </option>
-
-              @for (member of members; track member.userId) {
-
-                <option [value]="member.userId">
-                  {{ member.userName }}
-                </option>
+              </button>
 
               }
 
-            </select>
+          </div>
+
+
+          <div class="task-filter-grid">
+
+
+              <!-- Search -->
+
+              <div class="filter-field filter-search">
+
+                  <label for="task-search">
+                      Search
+                  </label>
+
+                  <input id="task-search" type="text" [(ngModel)]="taskSearchTerm" placeholder="Search title or description...">
+
+              </div>
+
+
+              <!-- Status -->
+
+              <div class="filter-field">
+
+                  <label for="task-status-filter">
+                      Status
+                  </label>
+
+                  <select id="task-status-filter" [(ngModel)]="taskStatusFilter">
+
+                      <option value="">
+                          All statuses
+                      </option>
+
+                      <option value="Todo">
+                          Todo
+                      </option>
+
+                      <option value="InProgress">
+                          In Progress
+                      </option>
+
+                      <option value="Completed">
+                          Completed
+                      </option>
+
+                      <option value="Cancelled">
+                          Cancelled
+                      </option>
+
+                  </select>
+
+              </div>
+
+
+              <!-- Priority -->
+
+              <div class="filter-field">
+
+                  <label for="task-priority-filter">
+                      Priority
+                  </label>
+
+                  <select id="task-priority-filter" [(ngModel)]="taskPriorityFilter">
+
+                      <option value="">
+                          All priorities
+                      </option>
+
+                      <option value="Low">
+                          Low
+                      </option>
+
+                      <option value="Medium">
+                          Medium
+                      </option>
+
+                      <option value="High">
+                          High
+                      </option>
+
+                  </select>
+
+              </div>
+
+
+              <!-- Assignee -->
+
+              <div class="filter-field">
+
+                  <label for="task-assignee-filter">
+                      Assigned To
+                  </label>
+
+                  <select id="task-assignee-filter" [(ngModel)]="taskAssigneeFilter">
+
+                      <option value="">
+                          Everyone
+                      </option>
+
+                      @for (member of members; track member.userId) {
+
+                      <option [value]="member.userId">
+                          {{ member.userName }}
+                      </option>
+
+                      }
+
+                  </select>
+
+              </div>
 
           </div>
 
-        </div>
 
+          <!-- Filter result -->
 
-        <!-- Filter result -->
+          <div class="task-filter-result">
 
-        <div class="task-filter-result">
+              Showing
 
-          Showing
+              <strong>
+          {{ filteredTasks.length }}
+        </strong> of
 
-          <strong>
-            {{ filteredTasks.length }}
-          </strong>
+              <strong>
+          {{ tasks.length }}
+        </strong> tasks
 
-          of
-
-          <strong>
-            {{ tasks.length }}
-          </strong>
-
-          tasks
-
-        </div>
+          </div>
 
       </div>
 
@@ -543,9 +473,9 @@
 
       @if (tasksLoading) {
 
-        <div class="tasks-loading">
+      <div class="tasks-loading">
           Loading tasks...
-        </div>
+      </div>
 
       }
 
@@ -554,26 +484,23 @@
       <!-- NO TASKS                                                 -->
       <!-- ======================================================= -->
 
-      @if (
-        !tasksLoading &&
-        tasks.length === 0
-      ) {
+      @if ( !tasksLoading && tasks.length === 0 ) {
 
-        <div class="tasks-empty">
+      <div class="tasks-empty">
 
           <div class="tasks-empty-icon">
-            ✓
+              ✓
           </div>
 
           <div class="tasks-empty-title">
-            No tasks yet
+              No tasks yet
           </div>
 
           <p>
-            Create the first task for this project.
+              Create the first task for this project.
           </p>
 
-        </div>
+      </div>
 
       }
 
@@ -582,32 +509,25 @@
       <!-- NO FILTER RESULTS                                        -->
       <!-- ======================================================= -->
 
-      @if (
-        !tasksLoading &&
-        tasks.length > 0 &&
-        filteredTasks.length === 0
-      ) {
+      @if ( !tasksLoading && tasks.length > 0 && filteredTasks.length === 0 ) {
 
-        <div class="tasks-empty">
+      <div class="tasks-empty">
 
           <div class="tasks-empty-title">
-            No matching tasks
+              No matching tasks
           </div>
 
           <p>
-            Try changing or clearing your filters.
+              Try changing or clearing your filters.
           </p>
 
-          <button
-            type="button"
-            class="clear-filters-button"
-            (click)="clearTaskFilters()">
+          <button type="button" class="clear-filters-button" (click)="clearTaskFilters()">
 
-            Clear Filters
+              Clear Filters
 
           </button>
 
-        </div>
+      </div>
 
       }
 
@@ -618,200 +538,157 @@
 
       <div class="add-task-form">
 
-        <h3>
-          Add Task
-        </h3>
+          <h3>
+        Add Task
+      </h3>
 
 
-        <div class="task-form-grid">
+          <div class="task-form-grid">
 
 
-                   <!-- Title -->
-                   <div class="form-field">
-                    <label for="task-title">Title</label>
+              <!-- Title -->
+              <div class="form-field">
+                  <label for="task-title">Title</label>
 
-                    <input
-                      id="task-title"
-                      name="newTaskTitle"
-                      type="text"
-                      [(ngModel)]="newTaskTitle"
-                      placeholder="Task title"
-                      required
-                      maxlength="200"
-                      [attr.aria-invalid]="!!newTaskTitleError"
-                      [attr.aria-describedby]="newTaskTitleError ? 'task-title-error' : null"
-                      (blur)="newTaskTitleError = newTaskTitle.trim() ? '' : 'Task title is required.'"
-                      (ngModelChange)="onNewTaskTitleChange()">
-
-                    @if (newTaskTitleError) {
-                      <p id="task-title-error" class="field-error" role="alert">
-                        {{ newTaskTitleError }}
-                      </p>
-                    }
-                  </div>
+                  <input id="task-title" name="newTaskTitle" type="text" [(ngModel)]="newTaskTitle" placeholder="Task title" required maxlength="200" [attr.aria-invalid]="!!newTaskTitleError" [attr.aria-describedby]="newTaskTitleError ? 'task-title-error' : null" (blur)="newTaskTitleError = newTaskTitle.trim() ? '' : 'Task title is required.'"
+                  (ngModelChange)="onNewTaskTitleChange()"> @if (newTaskTitleError) {
+                  <p id="task-title-error" class="field-error" role="alert">
+                      {{ newTaskTitleError }}
+                  </p>
+                  }
+              </div>
 
 
-          <!-- Description -->
+              <!-- Description -->
 
-          <div class="form-field">
+              <div class="form-field">
 
-            <label for="task-description">
-              Description
-            </label>
+                  <label for="task-description">
+                      Description
+                  </label>
 
-            <textarea
-              id="task-description"
-              [(ngModel)]="newTaskDescription"
-              placeholder="Task description"
-              rows="3">
-            </textarea>
+                  <textarea id="task-description" [(ngModel)]="newTaskDescription" placeholder="Task description" rows="3">
+                  </textarea>
 
-          </div>
+              </div>
 
 
-          <!-- Status -->
+              <!-- Status -->
 
-          <div class="form-field">
+              <div class="form-field">
 
-            <label for="task-status">
-              Status
-            </label>
+                  <label for="task-status">
+                      Status
+                  </label>
 
-            <select
-              id="task-status"
-              [(ngModel)]="newTaskStatus">
+                  <select id="task-status" [(ngModel)]="newTaskStatus">
 
-              <option value="Todo">
-                Todo
-              </option>
+                      <option value="Todo">
+                          Todo
+                      </option>
 
-              <option value="InProgress">
-                In Progress
-              </option>
+                      <option value="InProgress">
+                          In Progress
+                      </option>
 
-              <option value="Completed">
-                Completed
-              </option>
+                      <option value="Completed">
+                          Completed
+                      </option>
 
-              <option value="Cancelled">
-                Cancelled
-              </option>
+                      <option value="Cancelled">
+                          Cancelled
+                      </option>
 
-            </select>
+                  </select>
 
-          </div>
+              </div>
 
 
-          <!-- Priority -->
+              <!-- Priority -->
 
-          <div class="form-field">
+              <div class="form-field">
 
-            <label for="task-priority">
-              Priority
-            </label>
+                  <label for="task-priority">
+                      Priority
+                  </label>
 
-            <select
-              id="task-priority"
-              [(ngModel)]="newTaskPriority">
+                  <select id="task-priority" [(ngModel)]="newTaskPriority">
 
-              <option value="Low">
-                Low
-              </option>
+                      <option value="Low">
+                          Low
+                      </option>
 
-              <option value="Medium">
-                Medium
-              </option>
+                      <option value="Medium">
+                          Medium
+                      </option>
 
-              <option value="High">
-                High
-              </option>
+                      <option value="High">
+                          High
+                      </option>
 
-            </select>
+                  </select>
 
-          </div>
+              </div>
 
 
-                   <!-- Due Date -->
-                   <div class="form-field">
-                    <label for="task-due-date">Due Date</label>
+              <!-- Due Date -->
+              <div class="form-field">
+                  <label for="task-due-date">Due Date</label>
 
-                    <input
-                      id="task-due-date"
-                      name="newTaskDueDate"
-                      type="date"
-                      [(ngModel)]="newTaskDueDate"
-                      [attr.aria-invalid]="!!newTaskDueDateError"
-                      [attr.aria-describedby]="newTaskDueDateError ? 'task-due-date-error' : null"
-                      (ngModelChange)="onNewTaskDueDateChange()">
-
-                    @if (newTaskDueDateError) {
-                      <p id="task-due-date-error" class="field-error" role="alert">
-                        {{ newTaskDueDateError }}
-                      </p>
-                    }
-                  </div>
+                  <input id="task-due-date" name="newTaskDueDate" type="date" [(ngModel)]="newTaskDueDate" [attr.aria-invalid]="!!newTaskDueDateError" [attr.aria-describedby]="newTaskDueDateError ? 'task-due-date-error' : null" (ngModelChange)="onNewTaskDueDateChange()"> @if (newTaskDueDateError) {
+                  <p id="task-due-date-error" class="field-error" role="alert">
+                      {{ newTaskDueDateError }}
+                  </p>
+                  }
+              </div>
 
 
-          <!-- Assignee -->
+              <!-- Assignee -->
 
-          <div class="form-field">
+              <div class="form-field">
 
-            <label for="task-assignee">
-              Assigned To
-            </label>
+                  <label for="task-assignee">
+                      Assigned To
+                  </label>
 
-            <select
-              id="task-assignee"
-              [(ngModel)]="newTaskAssignedToUserId">
+                  <select id="task-assignee" [(ngModel)]="newTaskAssignedToUserId">
 
-              <option value="">
-                Unassigned
-              </option>
+                      <option value="">
+                          Unassigned
+                      </option>
 
-              @for (member of members; track member.userId) {
+                      @for (member of members; track member.userId) {
 
-                <option [value]="member.userId">
-                  {{ member.userName }}
-                </option>
+                      <option [value]="member.userId">
+                          {{ member.userName }}
+                      </option>
 
-              }
+                      }
 
-            </select>
+                  </select>
+
+              </div>
 
           </div>
 
-        </div>
 
-
-        @if (addTaskError) {
+          @if (addTaskError) {
 
           <p class="task-error">
-            {{ addTaskError }}
+              {{ addTaskError }}
           </p>
-
-        }
-
-
-        <button
-          type="button"
-          class="add-task-button"
-          [disabled]="
-            addingTask ||
-            !newTaskTitle.trim()
-          "
-          (click)="addTask()">
-
-          @if (addingTask) {
-
-            Adding...
-
-          } @else {
-
-            Add Task
 
           }
 
-        </button>
+
+          <button type="button" class="add-task-button" [disabled]="
+          addingTask ||
+          !newTaskTitle.trim()
+        " (click)="addTask()">
+
+              @if (addingTask) { Adding... } @else { Add Task }
+
+          </button>
 
       </div>
 
@@ -820,21 +697,13 @@
       <!-- TASK LIST                                                -->
       <!-- ======================================================= -->
 
-      @if (
-        !tasksLoading &&
-        filteredTasks.length > 0
-      ) {
+      @if ( !tasksLoading && filteredTasks.length > 0 ) {
 
-        <div class="tasks-list">
+      <div class="tasks-list">
 
-          @for (
-            task of filteredTasks;
-            track task.id
-          ) {
+          @for ( task of filteredTasks; track task.id ) {
 
-            <div
-              class="task-card"
-              [class.task-card-overdue]="isTaskOverdue(task)">
+          <div class="task-card" [class.task-card-overdue]="isTaskOverdue(task)">
 
 
               <!-- ================================================= -->
@@ -843,156 +712,138 @@
 
               @if (editingTaskId === task.id) {
 
-                <div class="edit-task-form">
+              <div class="edit-task-form">
 
                   <h3>
-                    Edit Task
-                  </h3>
+                  Edit Task
+                </h3>
 
 
                   <div class="task-form-grid">
 
 
-                    <!-- Title -->
+                      <!-- Title -->
 
-                    <div class="form-field">
+                      <div class="form-field">
 
-                      <label for="editTaskTitle-{{ task.id }}">
-                        Title
-                      </label>
+                          <label for="editTaskTitle-{{ task.id }}">
+                              Title
+                          </label>
 
-                      <input
-                        id="editTaskTitle-{{ task.id }}"
-                        type="text"
-                        [(ngModel)]="editTaskTitle">
+                          <input id="editTaskTitle-{{ task.id }}" type="text" [(ngModel)]="editTaskTitle">
 
-                    </div>
+                      </div>
 
 
-                    <!-- Description -->
+                      <!-- Description -->
 
-                    <div class="form-field">
+                      <div class="form-field">
 
-                      <label for="editTaskDescription-{{ task.id }}">
-                        Description
-                      </label>
+                          <label for="editTaskDescription-{{ task.id }}">
+                              Description
+                          </label>
 
-                      <input
-                        id="editTaskDescription-{{ task.id }}"
-                        type="text"
-                        [(ngModel)]="editTaskDescription">
+                          <input id="editTaskDescription-{{ task.id }}" type="text" [(ngModel)]="editTaskDescription">
 
-                    </div>
+                      </div>
 
 
-                    <!-- Status -->
+                      <!-- Status -->
 
-                    <div class="form-field">
+                      <div class="form-field">
 
-                      <label for="editTaskStatus-{{ task.id }}">
-                        Status
-                      </label>
+                          <label for="editTaskStatus-{{ task.id }}">
+                              Status
+                          </label>
 
-                      <select
-                        id="editTaskStatus-{{ task.id }}"
-                        [(ngModel)]="editTaskStatus">
+                          <select id="editTaskStatus-{{ task.id }}" [(ngModel)]="editTaskStatus">
 
-                        <option value="Todo">
-                          Todo
-                        </option>
+                              <option value="Todo">
+                                  Todo
+                              </option>
 
-                        <option value="InProgress">
-                          In Progress
-                        </option>
+                              <option value="InProgress">
+                                  In Progress
+                              </option>
 
-                        <option value="Completed">
-                          Completed
-                        </option>
+                              <option value="Completed">
+                                  Completed
+                              </option>
 
-                        <option value="Cancelled">
-                          Cancelled
-                        </option>
+                              <option value="Cancelled">
+                                  Cancelled
+                              </option>
 
-                      </select>
+                          </select>
 
-                    </div>
+                      </div>
 
 
-                    <!-- Priority -->
+                      <!-- Priority -->
 
-                    <div class="form-field">
+                      <div class="form-field">
 
-                      <label for="editTaskPriority-{{ task.id }}">
-                        Priority
-                      </label>
+                          <label for="editTaskPriority-{{ task.id }}">
+                              Priority
+                          </label>
 
-                      <select
-                        id="editTaskPriority-{{ task.id }}"
-                        [(ngModel)]="editTaskPriority">
+                          <select id="editTaskPriority-{{ task.id }}" [(ngModel)]="editTaskPriority">
 
-                        <option value="Low">
-                          Low
-                        </option>
+                              <option value="Low">
+                                  Low
+                              </option>
 
-                        <option value="Medium">
-                          Medium
-                        </option>
+                              <option value="Medium">
+                                  Medium
+                              </option>
 
-                        <option value="High">
-                          High
-                        </option>
+                              <option value="High">
+                                  High
+                              </option>
 
-                      </select>
+                          </select>
 
-                    </div>
+                      </div>
 
 
-                    <!-- Due Date -->
+                      <!-- Due Date -->
 
-                    <div class="form-field">
+                      <div class="form-field">
 
-                      <label for="editTaskDueDate-{{ task.id }}">
-                        Due Date
-                      </label>
+                          <label for="editTaskDueDate-{{ task.id }}">
+                              Due Date
+                          </label>
 
-                      <input
-                        id="editTaskDueDate-{{ task.id }}"
-                        type="date"
-                        [(ngModel)]="editTaskDueDate">
+                          <input id="editTaskDueDate-{{ task.id }}" type="date" [(ngModel)]="editTaskDueDate">
 
-                    </div>
+                      </div>
 
 
-                    <!-- Assignee -->
+                      <!-- Assignee -->
 
-                    <div class="form-field">
+                      <div class="form-field">
 
-                      <label for="editTaskAssignedTo-{{ task.id }}">
-                        Assigned To
-                      </label>
+                          <label for="editTaskAssignedTo-{{ task.id }}">
+                              Assigned To
+                          </label>
 
-                      <select
-                        id="editTaskAssignedTo-{{ task.id }}"
-                        [(ngModel)]="editTaskAssignedToUserId">
+                          <select id="editTaskAssignedTo-{{ task.id }}" [(ngModel)]="editTaskAssignedToUserId">
 
-                        <option value="">
-                          Unassigned
-                        </option>
+                              <option value="">
+                                  Unassigned
+                              </option>
 
-                        @for (
-                          member of members;
-                          track member.userId
-                        ) {
+                              @for ( member of members; track member.userId ) {
 
-                          <option [value]="member.userId">
-                            {{ member.userName }}
-                          </option>
+                              <option [value]="member.userId">
+                                  {{ member.userName }}
+                              </option>
 
-                        }
+                              }
 
-                      </select>
+                          </select>
 
-                    </div>
+                      </div>
 
                   </div>
 
@@ -1001,132 +852,98 @@
 
                   <div class="edit-actions">
 
-                    <button
-                      class="save-button"
-                      type="button"
-                      [disabled]="
-                        updatingTask ||
-                        !editTaskTitle.trim()
-                      "
-                      (click)="updateTask()">
+                      <button class="save-button" type="button" [disabled]="
+                      updatingTask ||
+                      !editTaskTitle.trim()
+                    " (click)="updateTask()">
 
-                      @if (updatingTask) {
+                          @if (updatingTask) { Saving... } @else { Save Changes }
 
-                        Saving...
-
-                      } @else {
-
-                        Save Changes
-
-                      }
-
-                    </button>
+                      </button>
 
 
-                    <button
-                      class="cancel-button"
-                      type="button"
-                      [disabled]="updatingTask"
-                      (click)="cancelEditTask()">
+                      <button class="cancel-button" type="button" [disabled]="updatingTask" (click)="cancelEditTask()">
 
-                      Cancel
+                          Cancel
 
-                    </button>
+                      </button>
 
                   </div>
 
-                </div>
+              </div>
 
               } @else {
 
 
-                <!-- ================================================= -->
-                <!-- NORMAL TASK MODE                                  -->
-                <!-- ================================================= -->
+              <!-- ================================================= -->
+              <!-- NORMAL TASK MODE                                  -->
+              <!-- ================================================= -->
 
-                <div class="task-main">
+              <div class="task-main">
 
                   <div class="task-info">
 
-                    <h3>
-                      {{ task.title }}
-                    </h3>
-
-
-                    @if (task.description) {
+                      <h3>
+                    {{ task.title }}
+                  </h3> @if (task.description) {
 
                       <p>
-                        {{ task.description }}
+                          {{ task.description }}
                       </p>
 
-                    }
+                      }
 
 
-                    <!-- Status / priority -->
+                      <!-- Status / priority -->
 
-                    <div class="task-badges">
+                      <div class="task-badges">
 
-                      <span
-                        class="status-badge"
-                        [class]="getTaskStatusClass(task.status)">
+                          <span class="status-badge" [class]="getTaskStatusClass(task.status)">
 
-                        {{ task.status }}
+                      {{ task.status }}
 
-                      </span>
+                    </span>
 
 
-                      <span
-                        class="priority-badge"
-                        [class]="getTaskPriorityClass(task.priority)">
+                          <span class="priority-badge" [class]="getTaskPriorityClass(task.priority)">
 
-                        {{ task.priority }}
+                      {{ task.priority }}
 
-                      </span>
-
-                    </div>
-
-
-                    <!-- Task metadata -->
-
-                    <div class="task-meta">
-
-                      <div class="task-assignee">
-
-                        <strong>
-                          Assigned To:
-                        </strong>
-
-                        {{ task.assignedToUserName || 'Unassigned' }}
+                    </span>
 
                       </div>
 
 
-                      @if (task.dueDate) {
+                      <!-- Task metadata -->
 
-                        <div
-                          class="task-due-date"
-                          [class]="getTaskDueDateClass(task)">
+                      <div class="task-meta">
 
-                          <strong>
-                            Due:
-                          </strong>
+                          <div class="task-assignee">
 
-                          {{ task.dueDate | date:'mediumDate' }}
+                              <strong>
+                        Assigned To:
+                      </strong> {{ task.assignedToUserName || 'Unassigned' }}
+
+                          </div>
 
 
-                          @if (isTaskOverdue(task)) {
+                          @if (task.dueDate) {
 
-                            <span class="overdue-label">
-                              Overdue
-                            </span>
+                          <div class="task-due-date" [class]="getTaskDueDateClass(task)">
+
+                              <strong>
+                          Due:
+                        </strong> {{ task.dueDate | date:'mediumDate' }} @if (isTaskOverdue(task)) {
+
+                              <span class="overdue-label">
+                            Overdue
+                          </span> }
+
+                          </div>
 
                           }
 
-                        </div>
-
-                      }
-
-                    </div>
+                      </div>
 
                   </div>
 
@@ -1135,37 +952,22 @@
 
                   <div class="task-actions">
 
-                    <button
-                      type="button"
-                      class="edit-button"
-                      (click)="startEditTask(task)">
+                      <button type="button" class="edit-button" (click)="startEditTask(task)">
 
-                      Edit
+                          Edit
 
-                    </button>
+                      </button>
 
 
-                    <button
-                      type="button"
-                      class="delete-button"
-                      [disabled]="deletingTaskId === task.id"
-                      (click)="deleteTask(task.id)">
+                      <button type="button" class="delete-button" [disabled]="deletingTaskId === task.id" (click)="deleteTask(task.id)">
 
-                      @if (deletingTaskId === task.id) {
+                          @if (deletingTaskId === task.id) { Deleting... } @else { Delete }
 
-                        Deleting...
-
-                      } @else {
-
-                        Delete
-
-                      }
-
-                    </button>
+                      </button>
 
                   </div>
 
-                </div>
+              </div>
 
               }
 
@@ -1176,70 +978,55 @@
 
               <div class="comments-section">
 
-                <h4>
-                  Comments
-                </h4>
-
-
-                @if (commentLoading[task.id]) {
+                  <h4>
+                Comments
+              </h4> @if (commentLoading[task.id]) {
 
                   <p class="comment-message">
-                    Loading comments...
+                      Loading comments...
                   </p>
 
-                }
-
-
-                @if (!commentLoading[task.id]) {
+                  } @if (!commentLoading[task.id]) {
 
 
                   <!-- Existing comments -->
 
-                  @for (
-                    comment of commentsByTask[task.id];
-                    track comment.id
-                  ) {
+                  @for ( comment of commentsByTask[task.id]; track comment.id ) {
 
-                    <div class="comment-card">
+                  <div class="comment-card">
 
                       <div class="comment-header">
 
-                        <strong>
-                          {{ comment.userName }}
-                        </strong>
+                          <strong>
+                        {{ comment.userName }}
+                      </strong>
 
-                        <small>
-                          {{ comment.createdAt | date:'medium' }}
-                        </small>
+                          <small>
+                        {{ comment.createdAt | date:'medium' }}
+                      </small>
 
                       </div>
 
 
                       <p>
-                        {{ comment.content }}
+                          {{ comment.content }}
                       </p>
 
 
-                      @if (
-                        comment.userId ===
-                        authService.getCurrentUser()?.userId
-                      ) {
+                      @if ( comment.userId === authService.getCurrentUser()?.userId ) {
 
-                        <button
-                          type="button"
-                          class="comment-delete-button"
-                          (click)="deleteComment(
-                            task.id,
-                            comment.id
-                          )">
+                      <button type="button" class="comment-delete-button" (click)="deleteComment(
+                          task.id,
+                          comment.id
+                        )">
 
                           Delete
 
-                        </button>
+                      </button>
 
                       }
 
-                    </div>
+                  </div>
 
                   }
 
@@ -1248,74 +1035,55 @@
 
                   @if (!commentsByTask[task.id].length) {
 
-                    <div class="comments-empty">
+                  <div class="comments-empty">
                       No comments yet. Start the conversation.
-                    </div>
+                  </div>
+
+                  } }
+
+
+                  <!-- Add comment -->
+
+                  <div class="comment-form">
+
+                      <textarea name="comment-descriptionss" [value]="
+                    commentTextByTask[task.id] || ''
+                  " (input)="
+                    commentTextByTask[task.id] =
+                      $any($event.target).value
+                  " placeholder="Write a comment..." rows="3">
+                      </textarea>
+
+
+                      <button type="button" class="comment-add-button" [disabled]="
+                    commentSubmitting[task.id] ||
+                    !(commentTextByTask[task.id] || '').trim()
+                  " (click)="addComment(task.id)">
+
+                          @if (commentSubmitting[task.id]) { Adding... } @else { Add Comment }
+
+                      </button>
+
+                  </div>
+
+
+                  <!-- Comment error -->
+
+                  @if (commentError[task.id]) {
+
+                  <p class="comment-error">
+                      {{ commentError[task.id] }}
+                  </p>
 
                   }
 
-                }
-
-
-                <!-- Add comment -->
-
-                <div class="comment-form">
-
-                  <textarea
-                    name="comment-descriptionss"
-                    [value]="
-                      commentTextByTask[task.id] || ''
-                    "
-                    (input)="
-                      commentTextByTask[task.id] =
-                        $any($event.target).value
-                    "
-                    placeholder="Write a comment..."
-                    rows="3">
-                  </textarea>
-
-
-                  <button
-                    type="button"
-                    class="comment-add-button"
-                    [disabled]="
-                      commentSubmitting[task.id] ||
-                      !(commentTextByTask[task.id] || '').trim()
-                    "
-                    (click)="addComment(task.id)">
-
-                    @if (commentSubmitting[task.id]) {
-
-                      Adding...
-
-                    } @else {
-
-                      Add Comment
-
-                    }
-
-                  </button>
-
-                </div>
-
-
-                <!-- Comment error -->
-
-                @if (commentError[task.id]) {
-
-                  <p class="comment-error">
-                    {{ commentError[task.id] }}
-                  </p>
-
-                }
-
               </div>
 
-            </div>
+          </div>
 
           }
 
-        </div>
+      </div>
 
       }
 
@@ -1325,28 +1093,22 @@
       <!-- ======================================================= -->
 
       @if (tasksError && !tasksLoading) {
-        <div class="task-error" role="alert">
+      <div class="task-error" role="alert">
           <p>{{ tasksError }}</p>
 
-          <button
-            type="button"
-            class="retry-button"
-            (click)="retryLoadTasks()">
-            Retry Loading Tasks
+          <button type="button" class="retry-button" (click)="retryLoadTasks()">
+              Retry Loading Tasks
           </button>
-        </div>
-      }
+      </div>
+      } @if (taskActionError) {
 
-
-      @if (taskActionError) {
-
-        <p class="task-error">
+      <p class="task-error">
           {{ taskActionError }}
-        </p>
+      </p>
 
       }
 
-    </div>
+  </div>
 
   }
 

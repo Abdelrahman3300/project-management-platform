@@ -1,29 +1,39 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { AppComponent } from './app.component';
+import { ProjectService } from './services/project.service';
+import { AuthService } from './services/auth.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers:  [
+        provideRouter([]),
+        provideHttpClient(),
+        {
+          provide: ProjectService,
+          useValue: {
+            getAll: () => ({
+              subscribe: () => {}
+            })
+          }
+        },
+        {
+          provide: AuthService,
+          useValue: {
+            isLoggedIn: () => false,
+            logout: () => {}
+          }
+        }
+      ]
     }).compileComponents();
   });
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it(`should have the 'full-stack-project' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('full-stack-project');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, full-stack-project');
-  });
 });

@@ -70,7 +70,11 @@ export class RegisterComponent {
         this.loading = false;
 
         if (error.status === 409) {
-          this.error = 'A user with this email already exists.';
+          this.error =
+            'An account with this email already exists.';
+        } else if (error.status === 400) {
+          this.error =
+            'Please check your information and try again.';
         } else {
           this.error =
             'Unable to create account. Please try again.';
