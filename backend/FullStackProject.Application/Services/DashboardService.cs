@@ -1,6 +1,7 @@
 using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
 using FullStackProject.Domain.Enums;
+using FullStackProject.Application.Exceptions;
 
 namespace FullStackProject.Application.Services;
 
@@ -26,8 +27,7 @@ public class DashboardService : IDashboardService
 
         if (currentUserId is null)
         {
-            throw new UnauthorizedAccessException(
-                "Authenticated user could not be identified.");
+            throw new UnauthenticatedUserException();
         }
 
         var projects =

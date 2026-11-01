@@ -1,6 +1,7 @@
 using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
 using FullStackProject.Domain.Entities;
+using FullStackProject.Application.Exceptions;
 
 
 namespace FullStackProject.Application.Services;
@@ -27,8 +28,7 @@ public class ProjectService : IProjectService
 
     if (currentUserId is null)
     {
-        throw new UnauthorizedAccessException(
-            "Authenticated user could not be identified.");
+         throw new  UnauthenticatedUserException();
     }
 
     var projects =
@@ -75,8 +75,7 @@ public class ProjectService : IProjectService
 
         if (currentUserId is null)
         {
-            throw new UnauthorizedAccessException(
-                "Authenticated user could not be identified.");
+            throw new UnauthorizedAccessException();
         }
 
         var owner =
@@ -120,7 +119,7 @@ public class ProjectService : IProjectService
 
         if (currentUserId is null)
         {
-            throw new UnauthorizedAccessException();
+            throw new UnauthenticatedUserException();
         }
 
         if (project.OwnerId != currentUserId.Value)

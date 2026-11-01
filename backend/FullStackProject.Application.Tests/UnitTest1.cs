@@ -2,6 +2,7 @@
 using FullStackProject.Application.Interfaces;
 using FullStackProject.Application.Services;
 using FullStackProject.Domain.Entities;
+using FullStackProject.Application.Exceptions;
 using Moq;
 using Xunit;
 
@@ -22,7 +23,7 @@ public class ProjectServiceTests
     }
 
     [Fact]
-    public async Task GetAllAsync_WhenUserIsNotAuthenticated_ThrowsUnauthorizedAccessException()
+    public async Task GetAllAsync_WhenUserIsNotAuthenticated_ThrowsUnauthenticatedUserException()
     {
         // Arrange
         _currentUserService
@@ -32,7 +33,7 @@ public class ProjectServiceTests
         var service = CreateService();
 
         // Act & Assert
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(
+        await Assert.ThrowsAsync<UnauthenticatedUserException>(
             () => service.GetAllAsync());
 
         _projectRepository.Verify(

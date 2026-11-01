@@ -60,6 +60,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ?? throw new InvalidOperationException(
                 "JWT key is not configured.");
 
+        var issuer = jwtSettings["Issuer"]
+            ?? throw new InvalidOperationException(
+                "JWT issuer is not configured.");
+
+        var audience = jwtSettings["Audience"]
+            ?? throw new InvalidOperationException(
+                "JWT audience is not configured.");
+
+        if (Encoding.UTF8.GetByteCount(key) < 32)
+        {
+            throw new InvalidOperationException(
+                "JWT key must be at least 32 bytes long.");
+        }
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -67,8 +81,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
 
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidAudience = jwtSettings["Audience"],
+            ValidIssuer = issuer,
+            ValidAudience = audience,
 
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(key)),

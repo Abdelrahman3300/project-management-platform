@@ -1,6 +1,7 @@
 using FullStackProject.Application.DTOs;
 using FullStackProject.Application.Interfaces;
 using FullStackProject.Domain.Entities;
+using FullStackProject.Application.Exceptions;
 
 namespace FullStackProject.Application.Services;
 
@@ -44,8 +45,7 @@ public class CommentService : ICommentService
 
         if (currentUserId is null)
         {
-            throw new UnauthorizedAccessException(
-                "Authenticated user could not be identified.");
+            throw new UnauthenticatedUserException();
         }
 
         var task = await _taskRepository.GetByIdAsync(taskId);
